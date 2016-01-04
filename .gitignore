@@ -1,1 +1,6 @@
 *.pyc
+.asetup.save
+InnerDetector/
+InstallArea/
+PhysicsAnalysis/
+WorkArea/
