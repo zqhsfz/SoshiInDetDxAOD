@@ -19,8 +19,10 @@ import os
 
 AMITag = "f643"
 TrfOptions = runUtils.GetOptions(AMITag)
-TrfExtraOptions = {'maxEvents': '2000', 'inputBSFile': '%IN', 'outputDAOD_IDTRKVALIDFile': '%OUT.InDetDxAOD.pool.root', 'skipEvents': '%SKIPEVENTS'}
-PathenaOptions = {'inDS': 'data15_13TeV.periodJ.physics_Main.PhysCont.DRAW_ZMUMU.t0pro19_v01', 'outDS': 'user.qzeng.data15_13TeV.periodJ.physics_Main.DRAW_ZMUMU.t0pro19_v01.SoshiInDetDxAOD-v00-00-00', 'dbRelease': 'LATEST', 'skipScout': None, 'nEventsPerJob': 2000}
+# TrfExtraOptions = {'maxEvents': '2000', 'inputBSFile': '%IN', 'outputDAOD_IDTRKVALIDFile': '%OUT.InDetDxAOD.pool.root', 'skipEvents': '%SKIPEVENTS'}
+# PathenaOptions = {'inDS': 'data15_13TeV.periodJ.physics_Main.PhysCont.DRAW_ZMUMU.t0pro19_v01', 'outDS': 'user.qzeng.data15_13TeV.periodJ.physics_Main.DRAW_ZMUMU.t0pro19_v01.SoshiInDetDxAOD-v00-00-00', 'dbRelease': 'LATEST', 'skipScout': None, 'nEventsPerJob': 2000}
+TrfExtraOptions = {'inputBSFile': '%IN', 'outputDAOD_IDTRKVALIDFile': '%OUT.InDetDxAOD.pool.root', 'skipEvents': '%SKIPEVENTS'}
+PathenaOptions = {'inDS': 'data15_13TeV.periodH.physics_Main.PhysCont.DRAW_ZMUMU.t0pro19_v01', 'outDS': 'user.qzeng.data15_13TeV.periodH.physics_Main.DRAW_ZMUMU.t0pro19_v01.SoshiInDetDxAOD-v00-00-00', 'dbRelease': 'LATEST', 'skipScout': None, 'nFilesPerJob': 1}
 cmd = runUtils.GetPathenaCmd(PathenaOptions, TrfOptions, TrfExtraOptions, doNewLine=False)
 
 print cmd

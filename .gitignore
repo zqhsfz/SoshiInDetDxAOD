@@ -4,3 +4,9 @@ InnerDetector/
 InstallArea/
 PhysicsAnalysis/
 WorkArea/
+data/
+code/EventLoop/rcSetup.*
+code/EventLoop/RootCoreBin/
+code/EventLoop/.RootCoreBin
+code/EventLoop/xAODAnaHelpers/
+code/EventLoop/xAODBTaggingEfficiency/
