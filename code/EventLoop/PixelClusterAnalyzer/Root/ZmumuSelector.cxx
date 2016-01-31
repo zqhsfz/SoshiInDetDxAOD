@@ -336,7 +336,7 @@ EL::StatusCode ZmumuSelector :: execute ()
       auto PixelCluster = GetPixelCluster(msos);
       if(!SelectGoodPixelCluster(PixelCluster)) continue;
 
-      FillHistogramPixelCluster(msos, PixelCluster, Track);
+      if(!FillHistogramPixelCluster(msos, PixelCluster, Track)) continue;
     }
   }
 
@@ -588,24 +588,30 @@ bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation
   // cluster fluctuation information
   int maxToT = -1;
   float maxCharge = -1.;
-  std::vector<int>   rdo_tot = PixelCluster->auxdata< std::vector<int> >("rdo_tot");
-  std::vector<float> rdo_charge = PixelCluster->auxdata< std::vector<float> >("rdo_charge");
-  std::vector<int>   rdo_eta_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_eta_pixel_index");
-  std::vector<int>   rdo_phi_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_phi_pixel_index");
-  float sumCharge = 0.;
 
-  for(unsigned int irdo = 0; irdo < rdo_tot.size(); irdo++){
-    if(rdo_tot[irdo] > maxToT) maxToT = rdo_tot[irdo];
-    if(rdo_charge[irdo] > maxCharge) maxCharge = rdo_charge[irdo];
+  try{ // why some data files does not have this branch ?!
+    std::vector<int>   rdo_tot = PixelCluster->auxdata< std::vector<int> >("rdo_tot");
+    std::vector<float> rdo_charge = PixelCluster->auxdata< std::vector<float> >("rdo_charge");
+    std::vector<int>   rdo_eta_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_eta_pixel_index");
+    std::vector<int>   rdo_phi_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_phi_pixel_index");
 
-    sumCharge += rdo_charge[irdo];
+    float sumCharge = 0.;
+    for(unsigned int irdo = 0; irdo < rdo_tot.size(); irdo++){
+      if(rdo_tot[irdo] > maxToT) maxToT = rdo_tot[irdo];
+      if(rdo_charge[irdo] > maxCharge) maxCharge = rdo_charge[irdo];
+
+      sumCharge += rdo_charge[irdo];
+    }
+
+    m_histsvc_pixelclusters->Set("MaxChargeProp", 1.0*maxCharge/m_histsvc_pixelclusters->Get("Charge"));
+    m_histsvc_pixelclusters->Set("MaxToTProp", 1.0*maxToT/m_histsvc_pixelclusters->Get("ToT"));
+
+    m_histsvc_pixelclusters->Set("SumCharge", sumCharge);
+    m_histsvc_pixelclusters->Set("SumEnergyLoss", sumCharge*3.62/1000.);
   }
-
-  m_histsvc_pixelclusters->Set("MaxChargeProp", 1.0*maxCharge/m_histsvc_pixelclusters->Get("Charge"));
-  m_histsvc_pixelclusters->Set("MaxToTProp", 1.0*maxToT/m_histsvc_pixelclusters->Get("ToT"));
-
-  m_histsvc_pixelclusters->Set("SumCharge", sumCharge);
-  m_histsvc_pixelclusters->Set("SumEnergyLoss", sumCharge*3.62/1000.);
+  catch(...){
+    // return false;
+  }
 
   // G4 information (MC ONLY) --> not available for now
   // if(isMC){
