@@ -10,3 +10,5 @@ code/EventLoop/RootCoreBin/
 code/EventLoop/.RootCoreBin
 code/EventLoop/xAODAnaHelpers/
 code/EventLoop/xAODBTaggingEfficiency/
+code/EventLoop/AutoHists
+code/EventLoop/submitDir*
