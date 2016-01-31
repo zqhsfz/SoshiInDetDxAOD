@@ -4,7 +4,7 @@ InnerDetector/
 InstallArea/
 PhysicsAnalysis/
 WorkArea/
-data/
+sample/
 code/EventLoop/rcSetup.*
 code/EventLoop/RootCoreBin/
 code/EventLoop/.RootCoreBin
