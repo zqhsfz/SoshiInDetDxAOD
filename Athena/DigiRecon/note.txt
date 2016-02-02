@@ -1,0 +1,9 @@
+- This is for MC digitization and reconstruction
+- MC digitization and reconstruction will use 20.7.3.8, based on rtag r7534
+- This is to be consistent with mc15c
+- HIT->RDO->ESD
+- Replace geometry version with ATLAS-R2-2015-03-15-00
+- Stick with the default conditionsTag
+- Remove all steps related to "RDOtoRDOTrigger"
+- add: —preExc “all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.usePixelDefaults=True;SiLorentzAngleSvc.OutputLevel=VERBOSE;print SiLorentzAngleSvc"
+- This should stop at ESD. ESD to DAOD should be produced with separate code

@@ -1,0 +1,3 @@
+- Transform ESD to InDetDxAOD
+- Use release 20.1.8.5
+- Simply put ESD as input, specify InDetDxAOD as output, and use Reco_tf
