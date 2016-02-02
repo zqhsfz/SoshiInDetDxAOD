@@ -8,3 +8,4 @@ cp patches/PixelPrepDataToxAOD.cxx InnerDetector/InDetEventCnv/InDetPrepRawDataT
 cp patches/PixelPrepDataToxAOD.h InnerDetector/InDetEventCnv/InDetPrepRawDataToxAOD/src
 cp patches/TrackStateOnSurfaceDecorator.cxx PhysicsAnalysis/DerivationFramework/DerivationFrameworkInDet/src
 cp patches/InDetDxAOD.py InnerDetector/InDetEventCnv/InDetPrepRawDataToxAOD/share
+cp patches/requirements InnerDetector/InDetEventCnv/InDetPrepRawDataToxAOD/cmt
