@@ -1,0 +1,871 @@
+PyJobTransforms.<module> 2016-02-03 00:32:06,424 INFO logging set in /cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc6-gcc48-opt/20.7.3/AtlasReconstruction/20.7.3/InstallArea/share/bin/Reco_tf.py
+PyJobTransforms.main 2016-02-03 00:32:07,833 INFO This is /cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc6-gcc48-opt/20.7.3/AtlasReconstruction/20.7.3/InstallArea/share/bin/Reco_tf.py
+PyJobTransforms.transform.parseCmdLineArgs 2016-02-03 00:32:08,421 INFO Transform command line was: '/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc6-gcc48-opt/20.7.3/AtlasReconstruction/20.7.3/InstallArea/share/bin/Reco_tf.py' '-h'
+usage: Reco_tf.py [-h] [--verbose]
+                  [--loglevel {INFO,CRITICAL,WARNING,VERBOSE,ERROR,DEBUG,FATAL,CATASTROPHE}]
+                  [--argdict FILE] [--argJSON FILE] [--dumpargs] [--showGraph]
+                  [--showPath] [--showSteps] [--dumpPickle FILE]
+                  [--dumpJSON FILE] [--reportName REPORTNAME]
+                  [--reportType TYPE [TYPE ...]] [--execOnly]
+                  [--env substep:KEY=VALUE [substep:KEY=VALUE ...]]
+                  [--imf substep:BOOL [substep:BOOL ...]]
+                  [--tcmalloc substep:BOOL [substep:BOOL ...]]
+                  [--steering substep:{in/out}{+-}DATA [substep:{in/out}{+-}DATA ...]]
+                  [--AMIConfig AMICONFIG] [--AMITag TAG] [--taskid TASKID]
+                  [--jobid JOBID] [--attempt ATTEMPT]
+                  [--ignoreFiles IGNOREFILES [IGNOREFILES ...]]
+                  [--ignorePatterns IGNOREPATTERNS [IGNOREPATTERNS ...]]
+                  [--ignoreErrors BOOL] [--checkEventCount BOOL]
+                  [--fileValidation BOOL] [--inputFileValidation BOOL]
+                  [--outputFileValidation BOOL]
+                  [--parallelFileValidation BOOL]
+                  [--athenaopts OPT1 OPT2 OPT3] [--command COMMAND]
+                  [--athena ATHENA]
+                  [--preExec substep:PREEXEC [substep:PREEXEC ...]]
+                  [--preInclude substep:PREINCLUDE [substep:PREINCLUDE ...]]
+                  [--postExec substep:POSTEXEC [substep:POSTEXEC ...]]
+                  [--postInclude substep:POSTINCLUDE [substep:POSTINCLUDE ...]]
+                  [--maxEvents substep:maxEvents [substep:maxEvents ...]]
+                  [--skipEvents SKIPEVENTS [SKIPEVENTS ...]]
+                  [--asetup substep:ASETUP [substep:ASETUP ...]]
+                  [--eventAcceptanceEfficiency EVENTACCEPTANCEEFFICIENCY]
+                  [--athenaMPMergeTargetSize dataType:targetSizeInMegaBytes [dataType:targetSizeInMegaBytes ...]]
+                  [--athenaMPStrategy substep:Strategy [substep:Strategy ...]]
+                  [--valgrind substep:BOOL]
+                  [--valgrindbasicopts OPT1,OPT2,OPT3]
+                  [--valgrindextraopts OPT1,OPT2,OPT3]
+                  [--DBRelease substep:DBRelease [substep:DBRelease ...]]
+                  [--conditionsTag substep:CondTag [substep:CondTag ...]]
+                  [--geometryVersion substep:GeoVersion [substep:GeoVersion ...]]
+                  [--beamType BEAMTYPE] [--runNumber RUNNUMBER]
+                  [--triggerConfig substep=triggerConf]
+                  [--trigFilterList TRIGFILTERLIST [TRIGFILTERLIST ...]]
+                  [--autoConfiguration AUTOCONFKEY [AUTOCONFKEY ...]]
+                  [--trigStream TRIGSTREAM]
+                  [--topOptions substep:TOPOPTIONS [substep:TOPOPTIONS ...]]
+                  [--valid BOOL] [--inputBSFile INPUTBSFILE [INPUTBSFILE ...]]
+                  [--inputDRAW_ZMUMUFile INPUTDRAW_ZMUMUFILE [INPUTDRAW_ZMUMUFILE ...]]
+                  [--inputDRAW_ZEEFile INPUTDRAW_ZEEFILE [INPUTDRAW_ZEEFILE ...]]
+                  [--inputDRAW_EMUFile INPUTDRAW_EMUFILE [INPUTDRAW_EMUFILE ...]]
+                  [--outputBSFile OUTPUTBSFILE]
+                  [--inputRDOFile INPUTRDOFILE [INPUTRDOFILE ...]]
+                  [--inputESDFile INPUTESDFILE [INPUTESDFILE ...]]
+                  [--outputESDFile OUTPUTESDFILE]
+                  [--outputRDO_TRIGFile OUTPUTRDO_TRIGFILE]
+                  [--inputRDO_TRIGFile INPUTRDO_TRIGFILE]
+                  [--inputAODFile INPUTAODFILE [INPUTAODFILE ...]]
+                  [--outputAODFile OUTPUTAODFILE]
+                  [--outputAOD_RPRFile OUTPUTAOD_RPRFILE]
+                  [--outputAOD_SKIMFile OUTPUTAOD_SKIMFILE]
+                  [--outputHISTFile OUTPUTHISTFILE]
+                  [--outputHIST_AODFile OUTPUTHIST_AODFILE]
+                  [--outputTAGFile OUTPUTTAGFILE]
+                  [--inputEVNTFile INPUTEVNTFILE [INPUTEVNTFILE ...]]
+                  [--outputTXT_JIVEXMLTGZFile OUTPUTTXT_JIVEXMLTGZFILE]
+                  [--outputDRAW_RPVLLFile DRAW_RPVLL]
+                  [--outputDRAW_ZEEFile DRAW_ZEE]
+                  [--outputDRAW_WENUFile DRAW_WENU]
+                  [--outputDRAW_ZMUMUFile DRAW_ZMUMU]
+                  [--outputDRAW_WMUNUFile DRAW_WMUNU]
+                  [--outputDRAW_IDPROJCOMMFile DRAW_IDPROJCOMM]
+                  [--outputDRAW_EGZFile DRAW_EGZ]
+                  [--outputDRAW_EGJPSIFile DRAW_EGJPSI]
+                  [--outputDRAW_TAUMUHFile DRAW_TAUMUH]
+                  [--outputDRAW_EMUFile DRAW_EMU]
+                  [--outputDAOD_SCTVALIDFile DAOD_SCTVALID]
+                  [--outputDESDM_ALLCELLSFile DESDM_ALLCELLS]
+                  [--outputDESDM_EGAMMAFile DESDM_EGAMMA]
+                  [--outputDESDM_MSPerfFile DESDM_MSPERF]
+                  [--outputDESDM_PHOJETFile DESDM_PHOJET]
+                  [--outputDESDM_SGLELFile DESDM_SGLEL]
+                  [--outputDESD_SGLELFile DESD_SGLEL]
+                  [--outputDESDM_MUONFile DESDM_MUON]
+                  [--outputDESD_SGLMUFile DESD_SGLMU]
+                  [--outputDESDM_SLTTMUFile DESDM_SLTTMU]
+                  [--outputDESD_TAUMUHFile DESD_TAUMUH]
+                  [--outputDESDM_CALJETFile DESDM_CALJET]
+                  [--outputDESDM_TRACKFile DESDM_TRACK]
+                  [--outputDESDM_METFile DESDM_MET]
+                  [--outputDESD_MBIASFile DESD_MBIAS]
+                  [--outputDESD_PRESCALEDFile DESD_PRESCALED]
+                  [--outputDESD_COLLCANDFile DESD_COLLCAND]
+                  [--outputD2ESD_WENUFile D2ESD_WENU]
+                  [--outputD2ESD_WMUNUFile D2ESD_WMUNU]
+                  [--outputD2ESD_DIPHOFile D2ESD_DIPHO]
+                  [--outputDESD_PIXELCOMMFile DESD_PIXELCOMM]
+                  [--outputDESD_SCTCOMMFile DESD_SCTCOMM]
+                  [--outputDESD_IDCOMMFile DESD_IDCOMM]
+                  [--outputDESD_IDPROJCOMMFile DESD_IDPROJCOMM]
+                  [--outputDESD_CALOCOMMFile DESD_CALOCOMM]
+                  [--outputDESD_TILECOMMFile DESD_TILECOMM]
+                  [--outputDESD_EMCLUSCOMMFile DESD_EMCLUSCOMM]
+                  [--outputDESD_EGTAUCOMMFile DESD_EGTAUCOMM]
+                  [--outputDESD_RPCCOMMFile DESD_RPCCOMM]
+                  [--outputDESD_TGCCOMMFile DESD_TGCCOMM]
+                  [--outputDESD_MUONCOMMFile DESD_MUONCOMM]
+                  [--outputDESD_RANDOMCOMMFile DESD_RANDOMCOMM]
+                  [--outputDESD_HIRAREFile DESD_HIRARE]
+                  [--outputDESD_SKIMELFile DESD_SKIMEL]
+                  [--outputDESD_ONIAMUMUHIFile DESD_ONIAMUMUHI]
+                  [--outputDESDM_RPVLLFile DESDM_RPVLL]
+                  [--outputDESD_CTLFWJETFile DESD_CTLFWJET]
+                  [--outputDESD_FWJETFile DESD_FWJET]
+                  [--outputDAOD_IDTRKVALIDFile DAOD_IDTRKVALID]
+                  [--outputDAOD_IDTIDEFile DAOD_IDTIDE]
+                  [--outputDAOD_IDTRKLUMIFile DAOD_IDTRKLUMI]
+                  [--outputDAOD_L1CALO1File DAOD_L1CALO1]
+                  [--outputDAOD_L1CALO2File DAOD_L1CALO2]
+                  [--outputDAOD_L1CALO3File DAOD_L1CALO3]
+                  [--outputD2ESD_ZMMFile D2ESD_ZMM]
+                  [--outputD2ESD_JPSIUPSMMFile D2ESD_JPSIUPSMM]
+                  [--outputDESD_DEDXFile DESD_DEDX]
+                  [--outputD2ESDM_TRKJETFile D2ESDM_TRKJET]
+                  [--outputD2AOD_DIPHOFile D2AOD_DIPHO]
+                  [--outputDAOD_ZEEGAMMAFile DAOD_ZEEGAMMA]
+                  [--outputDAOD_ZMUMUGAMMAFile DAOD_ZMUMUGAMMA]
+                  [--outputDAODM_SGLEMFile DAODM_SGLEM]
+                  [--outputDAODM_SGLPHFile DAODM_SGLPH]
+                  [--outputDAODM_SGLMUFile DAODM_SGLMU]
+                  [--outputDAODM_SGLTAUFile DAODM_SGLTAU]
+                  [--outputDAOD_2EMFile DAOD_2EM]
+                  [--outputDAOD_2PHFile DAOD_2PH]
+                  [--outputDAOD_2MUFile DAOD_2MU]
+                  [--outputDAOD_EMMUFile DAOD_EMMU]
+                  [--outputDAOD_EMTAUFile DAOD_EMTAU]
+                  [--outputDAOD_MUTAUFile DAOD_MUTAU]
+                  [--outputDAOD_EMMETFile DAOD_EMMET]
+                  [--outputDAOD_MUMETFile DAOD_MUMET]
+                  [--outputDAOD_JETMETFile DAOD_JETMET]
+                  [--outputDAOD_EMJETFile DAOD_EMJET]
+                  [--outputDAOD_MUJETFile DAOD_MUJET]
+                  [--outputDAOD_TAUJETFile DAOD_TAUJET]
+                  [--outputDAOD_SKIMELFile DAOD_SKIMEL]
+                  [--outputDAOD_EGLOOSEFile DAOD_EGLOOSE]
+                  [--outputDAOD_MUFile DAOD_MU]
+                  [--outputDAOD_ELLOOSEFile DAOD_ELLOOSE]
+                  [--outputDAOD_PHLOOSEFile DAOD_PHLOOSE]
+                  [--outputDAOD_ONIAMUMUFile DAOD_ONIAMUMU]
+                  [--outputDAOD_JPSIMUMUFile DAOD_JPSIMUMU]
+                  [--outputDAOD_UPSIMUMUFile DAOD_UPSIMUMU]
+                  [--outputD2AOD_DIONIAFile D2AOD_DIONIA]
+                  [--outputDAOD_TESTFile DAOD_TEST]
+                  [--outputD2AODM_ZEEFile D2AODM_ZEE]
+                  [--outputD2AODM_ZMUMUFile D2AODM_ZMUMU]
+                  [--outputD2AODM_WMUNUFile D2AODM_WMUNU]
+                  [--outputD2AOD_H4LFile D2AOD_H4L]
+                  [--outputDAOD_SUSYEGAMMAFile DAOD_SUSYEGAMMA]
+                  [--outputDAOD_SUSYMUONSFile DAOD_SUSYMUONS]
+                  [--outputDAOD_SUSYJETSFile DAOD_SUSYJETS]
+                  [--outputD2AOD_ZEEFile D2AOD_ZEE]
+                  [--outputD2AOD_WENUFile D2AOD_WENU]
+                  [--outputDAOD_RNDMFile DAOD_RNDM]
+                  [--outputDAOD_ELLOOSE18File DAOD_ELLOOSE18]
+                  [--outputDAOD_H4LBREMRECFile DAOD_H4LBREMREC]
+                  [--outputDAOD_HIGHMDIJETFile DAOD_HIGHMDIJET]
+                  [--outputDAODM_HIGHMJJFile DAODM_HIGHMJJ]
+                  [--outputDAOD_2LHSG2File DAOD_2LHSG2]
+                  [--outputDAOD_4LHSG2File DAOD_4LHSG2]
+                  [--outputDAOD_2L2QHSG2File DAOD_2L2QHSG2]
+                  [--outputDAOD_JPSIHSG2File DAOD_JPSIHSG2]
+                  [--outputDAOD_HSG1File DAOD_HSG1]
+                  [--outputDAOD_HWWFile DAOD_HWW]
+                  [--outputNTUP_SCTFile NTUP_SCT]
+                  [--outputNTUP_MUONCALIBFile NTUP_MUONCALIB]
+                  [--outputNTUP_TRKVALIDFile NTUP_TRKVALID]
+                  [--outputNTUP_FASTMONFile NTUP_FASTMON]
+                  [--outputNTUP_LARNOISEFile NTUP_LARNOISE]
+                  [--outputNTUP_WZFile NTUP_WZ]
+                  [--outputNTUP_TRTFile NTUP_TRT]
+                  [--outputNTUP_HECNOISEFile NTUP_HECNOISE]
+                  [--outputNTUP_ENHBIASFile NTUP_ENHBIAS]
+                  [--outputNTUP_TRUTHFile NTUP_TRUTH]
+                  [--outputNTUP_SUSYTRUTHFile NTUP_SUSYTRUTH]
+                  [--outputNTUP_HIGHMULTFile NTUP_HIGHMULT]
+                  [--outputNTUP_PROMPTPHOTFile NTUP_PROMPTPHOT]
+                  [--outputNTUP_MCPTPFile NTUP_MCPTP]
+                  [--outputNTUP_MCPScaleFile NTUP_MCPSCALE]
+                  [--outputDAOD_HSG2File DAOD_HSG2]
+                  [--outputDESDM_ZMUMUFile DESDM_ZMUMU]
+                  [--inputNTUP_COMMONFile INPUTNTUP_COMMONFILE [INPUTNTUP_COMMONFILE ...]]
+                  [--outputDNTUPFile OUTPUTDNTUPFILE]
+                  [--outputDAODFile OUTPUTDAODFILE]
+                  [--reductionConf REDUCTIONCONF [REDUCTIONCONF ...]]
+                  [--passThrough True/False]
+                  [--inputHITSFile INPUTHITSFILE [INPUTHITSFILE ...]]
+                  [--outputRDOFile OUTPUTRDOFILE [OUTPUTRDOFILE ...]]
+                  [--outputRDO_FILTFile OUTPUTRDO_FILTFILE [OUTPUTRDO_FILTFILE ...]]
+                  [--digiSeedOffset1 DIGISEEDOFFSET1]
+                  [--digiSeedOffset2 DIGISEEDOFFSET2]
+                  [--digiRndmSvc DIGIRNDMSVC]
+                  [--digiSteeringConf DIGISTEERINGCONF]
+                  [--samplingFractionDbTag SAMPLINGFRACTIONDBTAG]
+                  [--doAllNoise DOALLNOISE] [--AddCaloDigi ADDCALODIGI]
+                  [--LucidOn LUCIDON] [--AFPOn AFPON] [--ALFAOn ALFAON]
+                  [--ZDCOn ZDCON] [--FwdRegionOn FWDREGIONON]
+                  [--testPileUpConfig TESTPILEUPCONFIG]
+                  [--inputLowPtMinbiasHitsFile INPUTLOWPTMINBIASHITSFILE [INPUTLOWPTMINBIASHITSFILE ...]]
+                  [--inputHighPtMinbiasHitsFile INPUTHIGHPTMINBIASHITSFILE [INPUTHIGHPTMINBIASHITSFILE ...]]
+                  [--inputCavernHitsFile INPUTCAVERNHITSFILE [INPUTCAVERNHITSFILE ...]]
+                  [--inputBeamHaloHitsFile INPUTBEAMHALOHITSFILE [INPUTBEAMHALOHITSFILE ...]]
+                  [--inputBeamGasHitsFile INPUTBEAMGASHITSFILE [INPUTBEAMGASHITSFILE ...]]
+                  [--numberOfLowPtMinBias NUMBEROFLOWPTMINBIAS]
+                  [--numberOfHighPtMinBias NUMBEROFHIGHPTMINBIAS]
+                  [--numberOfBeamHalo NUMBEROFBEAMHALO]
+                  [--numberOfBeamGas NUMBEROFBEAMGAS]
+                  [--numberOfCavernBkg NUMBEROFCAVERNBKG]
+                  [--bunchSpacing BUNCHSPACING]
+                  [--pileupInitialBunch PILEUPINITIALBUNCH]
+                  [--pileupFinalBunch PILEUPFINALBUNCH]
+                  [--DataRunNumber DATARUNNUMBER] [--jobNumber JOBNUMBER]
+                  [--outputNTUP_PHYSVALFile OUTPUTNTUP_PHYSVALFILE]
+                  [--validationFlags VALIDATIONFLAGS [VALIDATIONFLAGS ...]]
+
+Transform Reco_tf. General purpose ATLAS digitisation and reconstruction
+transform Inputs can be HITS, RDO, BS, ESD or AOD, with outputs of RDO, ESD,
+AOD or DAODs. See https://twiki.cern.ch/twiki/bin/view/AtlasComputing/RecoTf
+for more details.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --verbose, --debug    Set transform loglevel to DEBUG
+  --loglevel {INFO,CRITICAL,WARNING,VERBOSE,ERROR,DEBUG,FATAL,CATASTROPHE}
+                        Set transform logging level
+  --argdict FILE        File containing pickled argument dictionary
+  --argJSON FILE, --argjson FILE
+                        File containing JSON serialised argument dictionary
+  --dumpargs            Dump transform arguments and exit
+  --showGraph           Show multi-step transform graph, then exit
+  --showPath            Show execution path only, then exit
+  --showSteps           Show list of executor steps only, then exit
+  --dumpPickle FILE     Interpret command line arguments and write them out as
+                        a pickle file
+  --dumpJSON FILE       Interpret command line arguments and write them out as
+                        a JSON file
+  --reportName REPORTNAME
+                        Base name for job reports (default name is "jobReport"
+                        for most reports, but "metadata" for classic prodsys
+                        XML)
+  --reportType TYPE [TYPE ...]
+                        Job reports to produce: valid values are "text",
+                        "json", "classic", "pilotPickle" and "gpickle"
+  --execOnly            Exec the first substep only, replacing the transform
+                        process (no job reports and the return code will be
+                        from the substep process)
+  --env substep:KEY=VALUE [substep:KEY=VALUE ...]
+                        Explicitly set environment variables for an executor
+                        (default is all substeps). N.B. this setting is passed
+                        to the shell, so reference to shell variables is
+                        allowed, e.g. KEY=VALUE:$KEY
+  --imf substep:BOOL [substep:BOOL ...]
+                        Manually include/exclude the Intel IMF maths library
+                        (otherwise this is disabled for base releases < 17.7,
+                        enabled otherwise)
+  --tcmalloc substep:BOOL [substep:BOOL ...]
+                        Switch preload of the tcmalloc library (disabled by
+                        default)
+  --steering substep:{in/out}{+-}DATA [substep:{in/out}{+-}DATA ...]
+                        Steer the transform by manipulating the execution
+                        graph before the execution path is calculated. Format
+                        is substep:{in,out}{+-}DATA,{in,out}{+-}DATA,... to
+                        modify the substep's input/output by adding/removing a
+                        data type. e.g. RAWtoESD:in-RDO,in+RDO_TRIG would
+                        remove RDO and add RDO_TRIG to the list of valid input
+                        datatypes for the RAWtoESD substep. See current
+                        version of
+                        trfArgClasses.argSubstepSteering.steeringAlises for
+                        supported aliases. https://twiki.cern.ch/twiki/bin/vie
+                        w/AtlasComputing/TransformSteering
+  --eventAcceptanceEfficiency EVENTACCEPTANCEEFFICIENCY
+                        Allowed "efficiency" for processing events - used to
+                        ensure output file has enough events (default 1.0)
+  --passThrough True/False
+                        Run the derivation framework in a pass-through mode,
+                        needed for some MC samples. Needs to be implemented in
+                        derivation JOs
+
+Metadata:
+  Metadata arguments that will be passed into the transform
+
+  --AMIConfig AMICONFIG, --AMI AMICONFIG
+                        Configure transform with AMI tag parameters
+  --AMITag TAG          AMI tag from which this job was defined - this option
+                        simply writes the relevant AMI tag value into the
+                        output metadata, it does not configure the job (use
+                        --AMIConfig for that)
+  --taskid TASKID       Task identification number
+  --jobid JOBID         Job identification number
+  --attempt ATTEMPT     Job attempt number
+
+Validation:
+  Standard job validation switches
+
+  --ignoreFiles IGNOREFILES [IGNOREFILES ...], --ignoreFilters IGNOREFILES [IGNOREFILES ...]
+                        Files containing error patterns to be ignored during
+                        logfile scans (will split on commas; use "None" to
+                        disable the standard "atlas_error_mask.db")
+  --ignorePatterns IGNOREPATTERNS [IGNOREPATTERNS ...]
+                        Regexp error patterns to be ignored during logfile
+                        scans (will be applied as a search against the whole
+                        logfile line)
+  --ignoreErrors BOOL   Ignore ERROR lines in logfiles (use with care this can
+                        mask serious problems; --ignorePatterns is prefered)
+  --checkEventCount BOOL
+                        Enable check of output events against input events
+                        (default: True)
+
+File Validation:
+  Standard file validation switches
+
+  --fileValidation BOOL
+                        If FALSE skip both input and output file validation
+                        (default TRUE; warning - do not use this option in
+                        production jobs!)
+  --inputFileValidation BOOL
+                        If FALSE skip input file validation (default TRUE;
+                        warning - do not use this option in production jobs!)
+  --outputFileValidation BOOL
+                        If FALSE skip output file validation (default TRUE;
+                        warning - do not use this option in production jobs!)
+  --parallelFileValidation BOOL
+                        Parallelise file validation if True
+
+Athena:
+  General Athena Options
+
+  --athenaopts OPT1 OPT2 OPT3
+                        Extra options to pass to athena. Will split on spaces.
+                        Options starting with "-" must be given as
+                        --athenaopts='--opt1 --opt2[=foo] ...'
+  --command COMMAND, -c COMMAND
+                        Run COMMAND before all else
+  --athena ATHENA       Use ATHENA as the athena executable
+  --preExec substep:PREEXEC [substep:PREEXEC ...]
+                        Python code to execute before main job options are
+                        included (can be optionally limited to a single
+                        substep)
+  --preInclude substep:PREINCLUDE [substep:PREINCLUDE ...]
+                        Python configuration fragment to include before main
+                        job options (can be optionally limited to a single
+                        substep). Will split on commas: frag1.py,frag2.py is
+                        understood.
+  --postExec substep:POSTEXEC [substep:POSTEXEC ...]
+                        Python code to execute after main job options are
+                        included (can be optionally limited to a single
+                        substep)
+  --postInclude substep:POSTINCLUDE [substep:POSTINCLUDE ...]
+                        Python configuration fragment to include after main
+                        job options (can be optionally limited to a single
+                        substep). Will split on commas: frag1.py,frag2.py is
+                        understood.
+  --maxEvents substep:maxEvents [substep:maxEvents ...]
+                        Set maximum events for each processing step (default
+                        substep is "first")
+  --skipEvents SKIPEVENTS [SKIPEVENTS ...]
+                        Number of events to skip over in the first processing
+                        step (skipping substep can be overridden)
+  --asetup substep:ASETUP [substep:ASETUP ...]
+                        asetup command string to be run before this substep is
+                        executed
+  --athenaMPMergeTargetSize dataType:targetSizeInMegaBytes [dataType:targetSizeInMegaBytes ...], --mts dataType:targetSizeInMegaBytes [dataType:targetSizeInMegaBytes ...]
+                        Set the target merge size for an AthenaMP output file
+                        type (give size in MB). Note that the special value 0
+                        means do not merge this output file; negative values
+                        mean always merge to a single file. Note that the
+                        datatype "ALL" will be used as a default for all
+                        datatypes not explicitly given their own value.
+  --athenaMPStrategy substep:Strategy [substep:Strategy ...]
+                        Set the AthenaMP scheduling strategy for a particular
+                        substep. Default is unset, except when n_inputFiles =
+                        n_workers, when it is "FileScheduling" (useful for
+                        ephemeral outputs).
+
+Valgrind:
+  General Valgrind Options
+
+  --valgrind substep:BOOL
+                        Enable Valgrind
+  --valgrindbasicopts OPT1,OPT2,OPT3
+                        Basic options passed to Valgrind when running Athena.
+                        Options starting with "-" must be given as
+                        --valgrindopts='--opt1=foo,--opt2=bar,...'
+  --valgrindextraopts OPT1,OPT2,OPT3
+                        Extra options passed to Valgrind when running Athena.
+                        Options starting with "-" must be given as
+                        --valgrindopts='--opt1=foo,--opt2=bar,...'
+
+Detector:
+  General detector configuration options, for simulation and reconstruction
+
+  --DBRelease substep:DBRelease [substep:DBRelease ...]
+                        Use DBRelease instead of ORACLE. Give either a
+                        DBRelease tarball file (e.g., DBRelease-21.7.1.tar.gz)
+                        or cvmfs DBRelease directory (e.g., 21.7.1 or current
+  --conditionsTag substep:CondTag [substep:CondTag ...]
+                        Conditions tag to set
+  --geometryVersion substep:GeoVersion [substep:GeoVersion ...]
+                        ATLAS geometry version tag
+  --beamType BEAMTYPE   Manual beam type setting
+  --runNumber RUNNUMBER, --RunNumber RUNNUMBER
+                        Manual run number setting
+
+Trigger:
+  Trigger Related Options
+
+  --triggerConfig substep=triggerConf
+                        Trigger configuration string (substep aware argument -
+                        default is to run trigger in RAWtoESD step, use syntax
+                        SUBSTEP=TRIGCONF if you want to run trigger somewhere
+                        else). N.B. This argument uses EQUALS (=) to separate
+                        the substep name from the value.
+  --trigFilterList TRIGFILTERLIST [TRIGFILTERLIST ...]
+                        Trigger filter list (multiple values can be given
+                        separately or split on commas; only understood in
+                        RAWtoESD)
+
+Common Reco:
+  Common Reconstruction Options
+
+  --autoConfiguration AUTOCONFKEY [AUTOCONFKEY ...]
+                        Autoconfiguration settings (whitespace or comma
+                        separated)
+  --trigStream TRIGSTREAM
+                        Trigger stream setting
+  --topOptions substep:TOPOPTIONS [substep:TOPOPTIONS ...]
+                        Alternative top options file for reconstruction (can
+                        be substep specific)
+  --valid BOOL          Enable decorations for AOD that allow for enhanced
+                        physics validation
+
+Reco Files:
+  Reconstruction file options
+
+  --inputBSFile INPUTBSFILE [INPUTBSFILE ...]
+                        Input bytestream file
+  --inputDRAW_ZMUMUFile INPUTDRAW_ZMUMUFILE [INPUTDRAW_ZMUMUFILE ...]
+                        Input skimmed Z->mumu bytestream
+  --inputDRAW_ZEEFile INPUTDRAW_ZEEFILE [INPUTDRAW_ZEEFILE ...]
+                        Input skimmed Z->ee bytestream
+  --inputDRAW_EMUFile INPUTDRAW_EMUFILE [INPUTDRAW_EMUFILE ...]
+                        Input skimmed e+mu bytestream
+  --outputBSFile OUTPUTBSFILE
+                        Output bytestream file
+  --inputRDOFile INPUTRDOFILE [INPUTRDOFILE ...]
+                        Input RDO file
+  --inputESDFile INPUTESDFILE [INPUTESDFILE ...]
+                        Input ESD file
+  --outputESDFile OUTPUTESDFILE
+                        Output ESD file
+  --outputRDO_TRIGFile OUTPUTRDO_TRIGFILE
+                        Output RDO_TRIG file
+  --inputRDO_TRIGFile INPUTRDO_TRIGFILE
+                        Input RDO_TRIG file
+  --inputAODFile INPUTAODFILE [INPUTAODFILE ...]
+                        Input AOD file
+  --outputAODFile OUTPUTAODFILE
+                        Output AOD file
+  --outputAOD_RPRFile OUTPUTAOD_RPRFILE
+                        Output AOD (reprocessed) file
+  --outputAOD_SKIMFile OUTPUTAOD_SKIMFILE
+                        Output skimmed AOD file
+  --outputHISTFile OUTPUTHISTFILE
+                        Output DQ monitoring file
+  --outputHIST_AODFile OUTPUTHIST_AODFILE
+                        Output DQ monitoring file
+  --outputTAGFile OUTPUTTAGFILE
+                        Output TAG file
+  --inputEVNTFile INPUTEVNTFILE [INPUTEVNTFILE ...]
+                        Input EVNT file for NTUP_TRUTH making
+  --outputTXT_JIVEXMLTGZFile OUTPUTTXT_JIVEXMLTGZFILE
+                        Output JiveXML.tgz file
+
+Primary DPDs:
+  Primary DPD File Options
+
+  --outputDRAW_RPVLLFile DRAW_RPVLL
+                        DPD DRAW output DRAW_RPVLL file
+  --outputDRAW_ZEEFile DRAW_ZEE
+                        DPD DRAW output DRAW_ZEE file
+  --outputDRAW_WENUFile DRAW_WENU
+                        DPD DRAW output DRAW_WENU file
+  --outputDRAW_ZMUMUFile DRAW_ZMUMU
+                        DPD DRAW output DRAW_ZMUMU file
+  --outputDRAW_WMUNUFile DRAW_WMUNU
+                        DPD DRAW output DRAW_WMUNU file
+  --outputDRAW_IDPROJCOMMFile DRAW_IDPROJCOMM
+                        DPD DRAW output DRAW_IDPROJCOMM file
+  --outputDRAW_EGZFile DRAW_EGZ
+                        DPD DRAW output DRAW_EGZ file
+  --outputDRAW_EGJPSIFile DRAW_EGJPSI
+                        DPD DRAW output DRAW_EGJPSI file
+  --outputDRAW_TAUMUHFile DRAW_TAUMUH
+                        DPD DRAW output DRAW_TAUMUH file
+  --outputDRAW_EMUFile DRAW_EMU
+                        DPD DRAW output DRAW_EMU file
+  --outputDAOD_SCTVALIDFile DAOD_SCTVALID
+                        DPD DAOD output DAOD_SCTVALID file
+  --outputDESDM_ALLCELLSFile DESDM_ALLCELLS
+                        DPD DESDM output DESDM_ALLCELLS file
+  --outputDESDM_EGAMMAFile DESDM_EGAMMA
+                        DPD DESDM output DESDM_EGAMMA file
+  --outputDESDM_MSPerfFile DESDM_MSPERF
+                        DPD DESDM output DESDM_MSPerf file
+  --outputDESDM_PHOJETFile DESDM_PHOJET
+                        DPD DESDM output DESDM_PHOJET file
+  --outputDESDM_SGLELFile DESDM_SGLEL
+                        DPD DESDM output DESDM_SGLEL file
+  --outputDESD_SGLELFile DESD_SGLEL
+                        DPD DESD output DESD_SGLEL file
+  --outputDESDM_MUONFile DESDM_MUON
+                        DPD DESDM output DESDM_MUON file
+  --outputDESD_SGLMUFile DESD_SGLMU
+                        DPD DESD output DESD_SGLMU file
+  --outputDESDM_SLTTMUFile DESDM_SLTTMU
+                        DPD DESDM output DESDM_SLTTMU file
+  --outputDESD_TAUMUHFile DESD_TAUMUH
+                        DPD DESD output DESD_TAUMUH file
+  --outputDESDM_CALJETFile DESDM_CALJET
+                        DPD DESDM output DESDM_CALJET file
+  --outputDESDM_TRACKFile DESDM_TRACK
+                        DPD DESDM output DESDM_TRACK file
+  --outputDESDM_METFile DESDM_MET
+                        DPD DESDM output DESDM_MET file
+  --outputDESD_MBIASFile DESD_MBIAS
+                        DPD DESD output DESD_MBIAS file
+  --outputDESD_PRESCALEDFile DESD_PRESCALED
+                        DPD DESD output DESD_PRESCALED file
+  --outputDESD_COLLCANDFile DESD_COLLCAND
+                        DPD DESD output DESD_COLLCAND file
+  --outputD2ESD_WENUFile D2ESD_WENU
+                        DPD D2ESD output D2ESD_WENU file
+  --outputD2ESD_WMUNUFile D2ESD_WMUNU
+                        DPD D2ESD output D2ESD_WMUNU file
+  --outputD2ESD_DIPHOFile D2ESD_DIPHO
+                        DPD D2ESD output D2ESD_DIPHO file
+  --outputDESD_PIXELCOMMFile DESD_PIXELCOMM
+                        DPD DESD output DESD_PIXELCOMM file
+  --outputDESD_SCTCOMMFile DESD_SCTCOMM
+                        DPD DESD output DESD_SCTCOMM file
+  --outputDESD_IDCOMMFile DESD_IDCOMM
+                        DPD DESD output DESD_IDCOMM file
+  --outputDESD_IDPROJCOMMFile DESD_IDPROJCOMM
+                        DPD DESD output DESD_IDPROJCOMM file
+  --outputDESD_CALOCOMMFile DESD_CALOCOMM
+                        DPD DESD output DESD_CALOCOMM file
+  --outputDESD_TILECOMMFile DESD_TILECOMM
+                        DPD DESD output DESD_TILECOMM file
+  --outputDESD_EMCLUSCOMMFile DESD_EMCLUSCOMM
+                        DPD DESD output DESD_EMCLUSCOMM file
+  --outputDESD_EGTAUCOMMFile DESD_EGTAUCOMM
+                        DPD DESD output DESD_EGTAUCOMM file
+  --outputDESD_RPCCOMMFile DESD_RPCCOMM
+                        DPD DESD output DESD_RPCCOMM file
+  --outputDESD_TGCCOMMFile DESD_TGCCOMM
+                        DPD DESD output DESD_TGCCOMM file
+  --outputDESD_MUONCOMMFile DESD_MUONCOMM
+                        DPD DESD output DESD_MUONCOMM file
+  --outputDESD_RANDOMCOMMFile DESD_RANDOMCOMM
+                        DPD DESD output DESD_RANDOMCOMM file
+  --outputDESD_HIRAREFile DESD_HIRARE
+                        DPD DESD output DESD_HIRARE file
+  --outputDESD_SKIMELFile DESD_SKIMEL
+                        DPD DESD output DESD_SKIMEL file
+  --outputDESD_ONIAMUMUHIFile DESD_ONIAMUMUHI
+                        DPD DESD output DESD_ONIAMUMUHI file
+  --outputDESDM_RPVLLFile DESDM_RPVLL
+                        DPD DESDM output DESDM_RPVLL file
+  --outputDESD_CTLFWJETFile DESD_CTLFWJET
+                        DPD DESD output DESD_CTLFWJET file
+  --outputDESD_FWJETFile DESD_FWJET
+                        DPD DESD output DESD_FWJET file
+  --outputDAOD_IDTRKVALIDFile DAOD_IDTRKVALID
+                        DPD DAOD output DAOD_IDTRKVALID file
+  --outputDAOD_IDTIDEFile DAOD_IDTIDE
+                        DPD DAOD output DAOD_IDTIDE file
+  --outputDAOD_IDTRKLUMIFile DAOD_IDTRKLUMI
+                        DPD DAOD output DAOD_IDTRKLUMI file
+  --outputDAOD_L1CALO1File DAOD_L1CALO1
+                        DPD DAOD output DAOD_L1CALO1 file
+  --outputDAOD_L1CALO2File DAOD_L1CALO2
+                        DPD DAOD output DAOD_L1CALO2 file
+  --outputDAOD_L1CALO3File DAOD_L1CALO3
+                        DPD DAOD output DAOD_L1CALO3 file
+  --outputD2ESD_ZMMFile D2ESD_ZMM
+                        DPD D2ESD output D2ESD_ZMM file
+  --outputD2ESD_JPSIUPSMMFile D2ESD_JPSIUPSMM
+                        DPD D2ESD output D2ESD_JPSIUPSMM file
+  --outputDESD_DEDXFile DESD_DEDX
+                        DPD DESD output DESD_DEDX file
+  --outputD2ESDM_TRKJETFile D2ESDM_TRKJET
+                        DPD D2ESDM output D2ESDM_TRKJET file
+  --outputD2AOD_DIPHOFile D2AOD_DIPHO
+                        DPD D2AOD output D2AOD_DIPHO file
+  --outputDAOD_ZEEGAMMAFile DAOD_ZEEGAMMA
+                        DPD DAOD output DAOD_ZEEGAMMA file
+  --outputDAOD_ZMUMUGAMMAFile DAOD_ZMUMUGAMMA
+                        DPD DAOD output DAOD_ZMUMUGAMMA file
+  --outputDAODM_SGLEMFile DAODM_SGLEM
+                        DPD DAODM output DAODM_SGLEM file
+  --outputDAODM_SGLPHFile DAODM_SGLPH
+                        DPD DAODM output DAODM_SGLPH file
+  --outputDAODM_SGLMUFile DAODM_SGLMU
+                        DPD DAODM output DAODM_SGLMU file
+  --outputDAODM_SGLTAUFile DAODM_SGLTAU
+                        DPD DAODM output DAODM_SGLTAU file
+  --outputDAOD_2EMFile DAOD_2EM
+                        DPD DAOD output DAOD_2EM file
+  --outputDAOD_2PHFile DAOD_2PH
+                        DPD DAOD output DAOD_2PH file
+  --outputDAOD_2MUFile DAOD_2MU
+                        DPD DAOD output DAOD_2MU file
+  --outputDAOD_EMMUFile DAOD_EMMU
+                        DPD DAOD output DAOD_EMMU file
+  --outputDAOD_EMTAUFile DAOD_EMTAU
+                        DPD DAOD output DAOD_EMTAU file
+  --outputDAOD_MUTAUFile DAOD_MUTAU
+                        DPD DAOD output DAOD_MUTAU file
+  --outputDAOD_EMMETFile DAOD_EMMET
+                        DPD DAOD output DAOD_EMMET file
+  --outputDAOD_MUMETFile DAOD_MUMET
+                        DPD DAOD output DAOD_MUMET file
+  --outputDAOD_JETMETFile DAOD_JETMET
+                        DPD DAOD output DAOD_JETMET file
+  --outputDAOD_EMJETFile DAOD_EMJET
+                        DPD DAOD output DAOD_EMJET file
+  --outputDAOD_MUJETFile DAOD_MUJET
+                        DPD DAOD output DAOD_MUJET file
+  --outputDAOD_TAUJETFile DAOD_TAUJET
+                        DPD DAOD output DAOD_TAUJET file
+  --outputDAOD_SKIMELFile DAOD_SKIMEL
+                        DPD DAOD output DAOD_SKIMEL file
+  --outputDAOD_EGLOOSEFile DAOD_EGLOOSE
+                        DPD DAOD output DAOD_EGLOOSE file
+  --outputDAOD_MUFile DAOD_MU
+                        DPD DAOD output DAOD_MU file
+  --outputDAOD_ELLOOSEFile DAOD_ELLOOSE
+                        DPD DAOD output DAOD_ELLOOSE file
+  --outputDAOD_PHLOOSEFile DAOD_PHLOOSE
+                        DPD DAOD output DAOD_PHLOOSE file
+  --outputDAOD_ONIAMUMUFile DAOD_ONIAMUMU
+                        DPD DAOD output DAOD_ONIAMUMU file
+  --outputDAOD_JPSIMUMUFile DAOD_JPSIMUMU
+                        DPD DAOD output DAOD_JPSIMUMU file
+  --outputDAOD_UPSIMUMUFile DAOD_UPSIMUMU
+                        DPD DAOD output DAOD_UPSIMUMU file
+  --outputD2AOD_DIONIAFile D2AOD_DIONIA
+                        DPD D2AOD output D2AOD_DIONIA file
+  --outputDAOD_TESTFile DAOD_TEST
+                        DPD DAOD output DAOD_TEST file
+  --outputD2AODM_ZEEFile D2AODM_ZEE
+                        DPD D2AODM output D2AODM_ZEE file
+  --outputD2AODM_ZMUMUFile D2AODM_ZMUMU
+                        DPD D2AODM output D2AODM_ZMUMU file
+  --outputD2AODM_WMUNUFile D2AODM_WMUNU
+                        DPD D2AODM output D2AODM_WMUNU file
+  --outputD2AOD_H4LFile D2AOD_H4L
+                        DPD D2AOD output D2AOD_H4L file
+  --outputDAOD_SUSYEGAMMAFile DAOD_SUSYEGAMMA
+                        DPD DAOD output DAOD_SUSYEGAMMA file
+  --outputDAOD_SUSYMUONSFile DAOD_SUSYMUONS
+                        DPD DAOD output DAOD_SUSYMUONS file
+  --outputDAOD_SUSYJETSFile DAOD_SUSYJETS
+                        DPD DAOD output DAOD_SUSYJETS file
+  --outputD2AOD_ZEEFile D2AOD_ZEE
+                        DPD D2AOD output D2AOD_ZEE file
+  --outputD2AOD_WENUFile D2AOD_WENU
+                        DPD D2AOD output D2AOD_WENU file
+  --outputDAOD_RNDMFile DAOD_RNDM
+                        DPD DAOD output DAOD_RNDM file
+  --outputDAOD_ELLOOSE18File DAOD_ELLOOSE18
+                        DPD DAOD output DAOD_ELLOOSE18 file
+  --outputDAOD_H4LBREMRECFile DAOD_H4LBREMREC
+                        DPD DAOD output DAOD_H4LBREMREC file
+  --outputDAOD_HIGHMDIJETFile DAOD_HIGHMDIJET
+                        DPD DAOD output DAOD_HIGHMDIJET file
+  --outputDAODM_HIGHMJJFile DAODM_HIGHMJJ
+                        DPD DAODM output DAODM_HIGHMJJ file
+  --outputDAOD_2LHSG2File DAOD_2LHSG2
+                        DPD DAOD output DAOD_2LHSG2 file
+  --outputDAOD_4LHSG2File DAOD_4LHSG2
+                        DPD DAOD output DAOD_4LHSG2 file
+  --outputDAOD_2L2QHSG2File DAOD_2L2QHSG2
+                        DPD DAOD output DAOD_2L2QHSG2 file
+  --outputDAOD_JPSIHSG2File DAOD_JPSIHSG2
+                        DPD DAOD output DAOD_JPSIHSG2 file
+  --outputDAOD_HSG1File DAOD_HSG1
+                        DPD DAOD output DAOD_HSG1 file
+  --outputDAOD_HWWFile DAOD_HWW
+                        DPD DAOD output DAOD_HWW file
+
+Additional DPDs:
+  Extra DPD file types
+
+  --outputNTUP_SCTFile NTUP_SCT
+                        DPD output NTUP_SCT file
+  --outputNTUP_MUONCALIBFile NTUP_MUONCALIB
+                        DPD output NTUP_MUONCALIB file
+  --outputNTUP_TRKVALIDFile NTUP_TRKVALID
+                        DPD output NTUP_TRKVALID file
+  --outputNTUP_FASTMONFile NTUP_FASTMON
+                        DPD output NTUP_FASTMON file
+  --outputNTUP_LARNOISEFile NTUP_LARNOISE
+                        DPD output NTUP_LARNOISE file
+  --outputNTUP_WZFile NTUP_WZ
+                        DPD output NTUP_WZ file
+  --outputNTUP_TRTFile NTUP_TRT
+                        DPD output NTUP_TRT file
+  --outputNTUP_HECNOISEFile NTUP_HECNOISE
+                        DPD output NTUP_HECNOISE file
+  --outputNTUP_ENHBIASFile NTUP_ENHBIAS
+                        DPD output NTUP_ENHBIAS file
+  --outputNTUP_TRUTHFile NTUP_TRUTH
+                        DPD output NTUP_TRUTH file
+  --outputNTUP_SUSYTRUTHFile NTUP_SUSYTRUTH
+                        DPD output NTUP_SUSYTRUTH file
+  --outputNTUP_HIGHMULTFile NTUP_HIGHMULT
+                        DPD output NTUP_HIGHMULT file
+  --outputNTUP_PROMPTPHOTFile NTUP_PROMPTPHOT
+                        DPD output NTUP_PROMPTPHOT file
+  --outputNTUP_MCPTPFile NTUP_MCPTP
+                        Ntuple file for MCP Tag and Probe
+  --outputNTUP_MCPScaleFile NTUP_MCPSCALE
+                        Ntuple file for MCP scale calibration
+  --outputDAOD_HSG2File DAOD_HSG2
+                        DPD output DAOD_HSG2 file
+  --outputDESDM_ZMUMUFile DESDM_ZMUMU
+                        DPD output DESDM_ZMUMU file
+
+Reduction:
+  Reduced Filetype Options
+
+  --inputNTUP_COMMONFile INPUTNTUP_COMMONFILE [INPUTNTUP_COMMONFILE ...]
+                        NTUP common input file
+  --outputDNTUPFile OUTPUTDNTUPFILE
+                        Reduced NTUP output filename base
+  --outputDAODFile OUTPUTDAODFILE
+                        Output reduced AOD filename base
+  --reductionConf REDUCTIONCONF [REDUCTIONCONF ...]
+                        Configuration of reduced stream outputs
+
+Digi:
+  Digitization specific options
+
+  --inputHITSFile INPUTHITSFILE [INPUTHITSFILE ...], --inputHitsFile INPUTHITSFILE [INPUTHITSFILE ...]
+                        Input HITS file
+  --outputRDOFile OUTPUTRDOFILE [OUTPUTRDOFILE ...]
+                        Output RDO file
+  --outputRDO_FILTFile OUTPUTRDO_FILTFILE [OUTPUTRDO_FILTFILE ...]
+                        Output Filtered RDO file
+  --digiSeedOffset1 DIGISEEDOFFSET1
+                        Offset for first random seed
+  --digiSeedOffset2 DIGISEEDOFFSET2
+                        Offset for second random seed
+  --digiRndmSvc DIGIRNDMSVC
+                        Random Number Service to use.
+  --digiSteeringConf DIGISTEERINGCONF
+                        Required configuration fod the digitization job
+  --samplingFractionDbTag SAMPLINGFRACTIONDBTAG
+                        This argument can be used to override the PhysicsList
+                        retrieved from the Simulation metadata. This
+                        information is used in the LAr sampling fraction data
+                        base tag used by LArfSamplG4Phys.
+  --doAllNoise DOALLNOISE
+                        Overall control of noise simulation during
+                        digitization - useful for overlay jobs, will set
+                        doCaloNoise, doMuonNoise, doInDetNoise
+                        digitizationFlags.
+  --AddCaloDigi ADDCALODIGI
+                        Save Calo Digits too, not just RawChannels.
+
+ForwardDetector:
+  Forward Detector Options
+
+  --LucidOn LUCIDON     Switch on lucid simulation/digitization.
+  --AFPOn AFPON         Switch on AFP simulation/digitization.
+  --ALFAOn ALFAON       Switch on ALFA simulation/digitization.
+  --ZDCOn ZDCON         Switch on ZDC simulation/digitization.
+  --FwdRegionOn FWDREGIONON
+                        Switch on FwdRegion simulation/digitization.
+
+PileUp:
+  Pile-Up Options
+
+  --testPileUpConfig TESTPILEUPCONFIG
+                        Calculates the number of background events that will
+                        be require for a given pile-up configuration.
+  --inputLowPtMinbiasHitsFile INPUTLOWPTMINBIASHITSFILE [INPUTLOWPTMINBIASHITSFILE ...], --LowPtMinbiasHitsFile INPUTLOWPTMINBIASHITSFILE [INPUTLOWPTMINBIASHITSFILE ...]
+                        Input HITS file for low pT minimum bias pile-up sub-
+                        events
+  --inputHighPtMinbiasHitsFile INPUTHIGHPTMINBIASHITSFILE [INPUTHIGHPTMINBIASHITSFILE ...], --HighPtMinbiasHitsFile INPUTHIGHPTMINBIASHITSFILE [INPUTHIGHPTMINBIASHITSFILE ...]
+                        Input HITS file for high pT minimum bias pile-up sub-
+                        events
+  --inputCavernHitsFile INPUTCAVERNHITSFILE [INPUTCAVERNHITSFILE ...], --cavernHitsFile INPUTCAVERNHITSFILE [INPUTCAVERNHITSFILE ...]
+                        Input HITS file for cavern background sub-events
+  --inputBeamHaloHitsFile INPUTBEAMHALOHITSFILE [INPUTBEAMHALOHITSFILE ...], --beamHaloHitsFile INPUTBEAMHALOHITSFILE [INPUTBEAMHALOHITSFILE ...]
+                        Input HITS file for beam halo sub-events
+  --inputBeamGasHitsFile INPUTBEAMGASHITSFILE [INPUTBEAMGASHITSFILE ...], --beamGasHitsFile INPUTBEAMGASHITSFILE [INPUTBEAMGASHITSFILE ...]
+                        Input HITS file for beam gas sub-events
+  --numberOfLowPtMinBias NUMBEROFLOWPTMINBIAS
+                        Sets the intial number low pt minbias events to add on
+                        average per bunch crossing. Overrides any values set
+                        in joboproperties by preIncludes or preExecs. May
+                        later be overridden during the job by run-dependent MC
+                        code.
+  --numberOfHighPtMinBias NUMBEROFHIGHPTMINBIAS
+                        Sets the intial number high pt minbias events to add
+                        on average per bunch crossing. Overrides any values
+                        set in joboproperties by preIncludes or preExecs. May
+                        later be overridden during the job by run-dependent MC
+                        code.
+  --numberOfBeamHalo NUMBEROFBEAMHALO
+                        Sets the intial number beam halo events to add on
+                        average per bunch crossing. Overrides any values set
+                        in joboproperties by preIncludes or preExecs. May
+                        later be overridden during the job by run-dependent MC
+                        code.
+  --numberOfBeamGas NUMBEROFBEAMGAS
+                        Sets the intial number beam gas events to add on
+                        average per bunch crossing. Overrides any values set
+                        in joboproperties by preIncludes or preExecs. May
+                        later be overridden during the job by run-dependent MC
+                        code.
+  --numberOfCavernBkg NUMBEROFCAVERNBKG
+                        Sets the intial number cavern background events to add
+                        on average per bunch crossing. Overrides any values
+                        set in joboproperties by preIncludes or preExecs. May
+                        later be overridden during the job by run-dependent MC
+                        code. NB this value is an integer!
+  --bunchSpacing BUNCHSPACING
+                        Overrides any values of digitizationFlags.bunchSpacing
+                        by preIncludes or preExecs. When using bunch structure
+                        is being usedthis sets the time between successive
+                        elements in the bunch structure pattern. If not using
+                        bunch-structure, this can be used to run pile-up with
+                        a fixed X ns spacing between filled bunch-crossings.
+  --pileupInitialBunch PILEUPINITIALBUNCH
+                        Initial (relative) bunch crossing to use pileup -
+                        default -32
+  --pileupFinalBunch PILEUPFINALBUNCH
+                        Initial (relative) bunch crossing to use pileup -
+                        default 32
+
+SimDigi:
+  Common Simulation Options
+
+  --DataRunNumber DATARUNNUMBER
+                        Override existing run number with this value -
+                        deprecated?
+  --jobNumber JOBNUMBER
+                        The number of this job in the current
+                        RunDependentSimulation task.
+
+Validation Files:
+  Physics validation file options
+
+  --outputNTUP_PHYSVALFile OUTPUTNTUP_PHYSVALFILE
+                        Output physics validation file
+
+Validation Args:
+  Physics validation options
+
+  --validationFlags VALIDATIONFLAGS [VALIDATIONFLAGS ...]
+                        Physics validation histogram switches

@@ -5,5 +5,5 @@
 - Replace geometry version with ATLAS-R2-2015-03-15-00
 - Stick with the default conditionsTag
 - Remove all steps related to "RDOtoRDOTrigger"
-- add: —preExc “all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.usePixelDefaults=True;SiLorentzAngleSvc.OutputLevel=VERBOSE;print SiLorentzAngleSvc"
+- add: -preExc "all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.usePixelDefaults=True;SiLorentzAngleSvc.OutputLevel=VERBOSE;print SiLorentzAngleSvc"
 - This should stop at ESD. ESD to DAOD should be produced with separate code
