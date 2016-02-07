@@ -1,0 +1,11 @@
+pathena \
+--trf "Reco_tf.py \
+--autoConfiguration 'everything' \
+--inputESDFile %IN \
+--outputDAOD_IDTRKVALIDFile %OUT.InDetDxAOD.pool.root \
+--skipEvents %SKIPEVENTS \
+--maxEvents '100'" \
+--nFilesPerJob=1 \
+--skipScout \
+--inDS=user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.e3601_ATLAS-R2-2015-03-15-00.v1_BichselON_EXT0 \
+--outDS=user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v1_BichselON

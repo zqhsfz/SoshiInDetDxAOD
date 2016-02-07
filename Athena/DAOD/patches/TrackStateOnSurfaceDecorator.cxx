@@ -309,13 +309,10 @@ namespace DerivationFramework {
       
       //Calculate and decorate track particle with TRT dEdx value    
       if (m_storeTRT) {
-        decoratorTRTdEdx (*track)     = m_TRTdEdxTool->dEdx( trkTrack, !m_isSimulation, true, true, true, numberOfPrimaryVertices);
-        //decoratorTRTdEdx (*track)     = m_TRTdEdxTool->dEdx( trkTrack, true, true, true);
+//      decoratorTRTdEdx (*track)     = m_TRTdEdxTool->dEdx( trkTrack, !m_isSimulation, true, true, true, numberOfPrimaryVertices);
+        decoratorTRTdEdx (*track)     = m_TRTdEdxTool->dEdx( trkTrack, true, true, true);
         decoratorTRTusedHits (*track) = m_TRTdEdxTool->usedHits( trkTrack, true, true);
       };
-
-      //SHEENA ATTEMPTING TO ADD AUXDATA
-      //track->auxdata<ElementLink<xAOD::TrackStateValidationContainer> >("TestDecor") = 1.0;
 
       // -- Add Track states to the current track, filtering on their type
       std::vector<const Trk::TrackStateOnSurface*> tsoss;
@@ -395,7 +392,6 @@ namespace DerivationFramework {
          
         //Create new MSOS to fill with information
         xAOD::TrackStateValidation*  msos =  new xAOD::TrackStateValidation();
-    
 
         //Put it in the obeject in the correct conatiner -  one for each detector type.
         if(isTRT){        
@@ -445,17 +441,10 @@ namespace DerivationFramework {
 
         const Trk::TrackParameters* tp = trackState->trackParameters();       
 
-        float radius = 32.;
-        Trk::CylinderSurface cylSurf(radius,3000.0);
-       // Trk::PerigeeSurface newSurface(newDetElem);
-
         // Track extrapolation
         std::unique_ptr<const Trk::TrackParameters> extrap( m_extrapolator->extrapolate(*trkTrack,trackState->surface()) );
-        std::unique_ptr<const Trk::TrackParameters> perigee( m_extrapolator->extrapolate(*trkTrack,(trkTrack->perigeeParameters())->associatedSurface(),Trk::oppositeMomentum,true, Trk::pion, Trk::addNoise));
-        std::unique_ptr<const Trk::TrackParameters> outputParams( m_extrapolator->extrapolate(*perigee, cylSurf,Trk::alongMomentum,true,Trk::pion,Trk::removeNoise));
-
-        //std::unique_ptr<const Trk::TrackParameters> extrap( m_extrapolator->extrapolate(*trkTrack,trackState->surface(),Trk::PropDirection::anyDirection,false));
-        //const Trk::TrackParameters* extrap = m_extrapolator->extrapolate(*trkTrack,trackState->surface(),Trk::PropDirection::anyDirection,true,Trk::ParticleHypothesis::pion,Trk::MaterialUpdateMode::removeNoise);
+//        const Trk::TrackParameters* extrap = m_extrapolator->extrapolate(*trkTrack,trackState->surface(),Trk::PropDirection::anyDirection,false);
+//        const Trk::TrackParameters* extrap = m_extrapolator->extrapolate(*trkTrack,trackState->surface(),Trk::PropDirection::anyDirection,true,Trk::ParticleHypothesis::pion,Trk::MaterialUpdateMode::removeNoise);
 //        const Trk::TrackParameters* extrap = m_extrapolator->extrapolate(*trkTrack,trackState->surface(),Trk::PropDirection::anyDirection,true,Trk::ParticleHypothesis::nonInteractingMuon,Trk::MaterialUpdateMode::addNoise);
 
 //        Amg::Transform3D *newDetElem = new Amg::Transform3D();
@@ -463,40 +452,13 @@ namespace DerivationFramework {
 //        Trk::PerigeeSurface newSurface(newDetElem);
 //        const Trk::TrackParameters* extrap = m_extrapolator->extrapolateDirectly(track->perigeeParameters(),newSurface);
 
-        // Set local positions on the surface
-        //SHEENA
-        std::vector<float> position;
-        if (tp) { 
-          msos->setLocalPosition( tp->parameters()[0], tp->parameters()[1] ); 
-
-           
-          //SHEENA
-          //position.push_back(tp->parameters()[0]);
-          //position.push_back(tp->parameters()[1]);
-          //msos->auxdata<std::vector<float>>("TestDecoration") = position;
-          //msos->auxdata<float>("TestDecoration") = tp->parameters()[0];
-
-          //if (extrap->get()) {
-          if (extrap.get()) {
-            ATH_MSG_DEBUG("    Original position " << tp->parameters()[0] << " " << tp->parameters()[1]);
-            ATH_MSG_DEBUG("Extrapolated position " << extrap->parameters()[0] << " " << extrap->parameters()[1]);
-          }
-
-        }
-        else {
-
-          //if (extrap->get()) {
-          if (extrap.get()) {
-            msos->setLocalPosition( extrap->parameters()[0], extrap->parameters()[1] ); 
-          }
-          else { 
-            ATH_MSG_DEBUG("Track extrapolation failed."); 
-          }
-        }
-//SHEENA
+        // NEW STUFF
+        float radius = 32.;
+        Trk::CylinderSurface cylSurf(radius,3000.0);
+        std::unique_ptr<const Trk::TrackParameters> perigee( m_extrapolator->extrapolate(*trkTrack,(trkTrack->perigeeParameters())->associatedSurface(),Trk::oppositeMomentum,true, Trk::pion, Trk::addNoise));
+        std::unique_ptr<const Trk::TrackParameters> outputParams( m_extrapolator->extrapolate(*perigee, cylSurf,Trk::alongMomentum,true,Trk::pion,Trk::removeNoise));
 
         if(isPixel){
-
           if (outputParams.get()) {
             msos->auxdata<float>("TrkIBLX") = outputParams->position().x();
             msos->auxdata<float>("TrkIBLY") = outputParams->position().y();
@@ -507,8 +469,28 @@ namespace DerivationFramework {
             msos->auxdata<float>("TrkIBLY") = 0.0;
             msos->auxdata<float>("TrkIBLZ") = 0.0;
           }
+        }
+        // END OF NEW STUFF
+
+        // Set local positions on the surface
+        if (tp) { 
+          msos->setLocalPosition( tp->parameters()[0], tp->parameters()[1] ); 
+
+          if (extrap.get()) {
+            ATH_MSG_DEBUG("    Original position " << tp->parameters()[0] << " " << tp->parameters()[1]);
+            ATH_MSG_DEBUG("Extrapolated position " << extrap->parameters()[0] << " " << extrap->parameters()[1]);
+          }
 
         }
+        else {
+          if (extrap.get()) {
+            msos->setLocalPosition( extrap->parameters()[0], extrap->parameters()[1] ); 
+          }
+          else { 
+            ATH_MSG_DEBUG("Track extrapolation failed."); 
+          }
+        }
+
         // Set calculate local incident angles
         const Trk::TrkDetElementBase *de = trackState->surface().associatedDetectorElement();
         const InDetDD::SiDetectorElement *side = dynamic_cast<const InDetDD::SiDetectorElement *>(de);
@@ -556,7 +538,7 @@ namespace DerivationFramework {
             hit = &crot->rioOnTrack( crot->indexOfMaxAssignProb() );
           }
         }
-
+        
         if(m_addPRD){
           // Build an element link to the xAOD PRD
           const Trk::PrepRawData* prd = hit->prepRawData();
@@ -570,6 +552,7 @@ namespace DerivationFramework {
             }
           } 
         }
+
 
 //        if (isPixel ) {
 //           tsos_bec.push_back( (int)m_pixId->barrel_ec(surfaceID) );
@@ -589,12 +572,6 @@ namespace DerivationFramework {
 //        }
         
         
-        //std::cout << "*************************** Adding test decoration here!!!!!!!!!!**********************" << std::endl;
-        //if (isPixel) {
-        //    std::cout << "inside loop" << std::endl;
-         //   msos->auxdata<float>("TestDecoration") = 1.0;
-        //}
-            
 
  
  
@@ -603,7 +580,6 @@ namespace DerivationFramework {
           TRTCond::RtRelation const *rtr = m_trtcaldbSvc->getRtRelation(surfaceID);
           if(rtr) {
             if (tp){
-              std::cout << "adding drift time" << std::endl;
               msos->auxdata<float>("driftTime") = rtr->drifttime(fabs(tp->parameters()[0]));
             }
             else {
@@ -619,7 +595,6 @@ namespace DerivationFramework {
           const Trk::ResidualPull *biased = 0;
           const Trk::ResidualPull *unbiased = 0;
           if (tp) { 
-
             biased   = m_residualPullCalculator->residualPull(measurement, tp, Trk::ResidualPull::Biased);
 
             std::unique_ptr<const Trk::TrackParameters> unbiasedTp( m_updator->removeFromState(*tp, measurement->localParameters(), measurement->localCovariance()) );   
@@ -637,7 +612,6 @@ namespace DerivationFramework {
             if(biased->dimension()>Trk::locY){  
               msos->setBiasedResidual( biased->residual()[Trk::locX], biased->residual()[Trk::locY] );
               msos->setBiasedPull( biased->pull()[Trk::locX], biased->pull()[Trk::locY] );            
-              //msos->auxdata<float>("TestDecoration") = 1.0; //SHEENA
             } else {
               msos->setBiasedResidual( biased->residual()[Trk::locX], 0 );
               msos->setBiasedPull( biased->pull()[Trk::locX], 0 );            
