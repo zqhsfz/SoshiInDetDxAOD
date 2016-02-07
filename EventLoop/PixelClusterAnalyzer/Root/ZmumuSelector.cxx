@@ -12,7 +12,6 @@
 
 // EDM include(s)
 #include "AthContainers/ConstDataVector.h"
-#include "xAODMuon/MuonContainer.h"
 
 // ROOT include(s)
 #include "TLorentzVector.h"
@@ -99,7 +98,6 @@ namespace TrackStateOnSurface {
   };
 }
 
-
 ZmumuSelector :: ZmumuSelector ()
 {
   // Here you put any code for the base initialization of variables,
@@ -111,21 +109,33 @@ ZmumuSelector :: ZmumuSelector ()
 
   Info("ZmumuSelector()", "Calling constructor");
 
+  m_muonSelection = 0;
+
   m_event = 0;
   m_store = 0;
+
+  m_eventInfo = 0;
 
   m_debug = false;
 
   m_inMuonContainerName = "";
   m_outMuonContainerName = "";
-  m_outTrackContainerName = "";
+
+  m_inJetContainerName = "";
+  m_inTrackContainerName = "";
+
+  m_outTrackContainerName_Zmumu = "";
+  m_outTrackContainerName_Jet = "";
+  m_outTrackContainerName_Other = "";
 
   m_outputName = "ZmumuSelector";
 
+  m_histsvc_cutflow = 0;
   m_histsvc_event = 0;
   m_histsvc_muons = 0;
   m_histsvc_tracks = 0;
   m_histsvc_pixelclusters = 0;
+
   m_EvtWeight = 1.;
 
   m_PrimaryVertex = 0;
@@ -206,7 +216,12 @@ EL::StatusCode ZmumuSelector :: initialize ()
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
 
-
+  m_muonSelection = new CP::MuonSelectionTool("MuonSelection_Zmumu");
+  m_muonSelection->msg().setLevel(MSG::ERROR);
+  // does not matter what initialization we use, since we will do explicit cut later
+  m_muonSelection->setProperty("MaxEta", 2.5);
+  m_muonSelection->setProperty("MuQuality", 2); // Medium
+  m_muonSelection->initialize();
 
   return EL::StatusCode::SUCCESS;
 }
@@ -223,6 +238,7 @@ EL::StatusCode ZmumuSelector :: execute ()
   if(m_debug) Info("execute()", "Running ZmumuSelector ...");
 
   // reset hist svc
+  m_histsvc_cutflow->Reset();
   m_histsvc_event->Reset();
   m_histsvc_muons->Reset();
   m_histsvc_tracks->Reset();
@@ -231,54 +247,124 @@ EL::StatusCode ZmumuSelector :: execute ()
   // get primary vertex
   std::string PrimaryVertexContainerName("PrimaryVertices");
   const xAOD::VertexContainer* PrimaryVertices(nullptr);
-  RETURN_CHECK("ZmumuSelector::GetPrimaryVertex()", HelperFunctions::retrieve(PrimaryVertices, PrimaryVertexContainerName, m_event, m_store, m_debug), "");
+  RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(PrimaryVertices, PrimaryVertexContainerName, m_event, m_store, m_debug), "");
   m_PrimaryVertex = HelperFunctions::getPrimaryVertex(PrimaryVertices);
 
   // set weight
   m_EvtWeight = 1.;
 
+  // Initial of cut-flow
+  FillCutflow("Initial");
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Triggers 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  if(m_debug) Info("execute()", "Passing Triggers");
+
+  RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(m_eventInfo, "EventInfo", m_event, m_store, m_debug), "");
+
+  std::vector<std::string> passTriggers = m_eventInfo->auxdata<std::vector<std::string> >("passTriggers");
+  bool pass_HLT_mu20_iloose_L1MU15 = (std::find(passTriggers.begin(), passTriggers.end(), "HLT_mu20_iloose_L1MU15") != passTriggers.end());
+  bool pass_HLT_mu50 = (std::find(passTriggers.begin(), passTriggers.end(), "HLT_mu50") != passTriggers.end());
+
+  if( !pass_HLT_mu20_iloose_L1MU15 && !pass_HLT_mu50 ) return EL::StatusCode::SUCCESS;
+
+  FillCutflow("PassTrigger");
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Jet Cleaning
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  if(m_debug) Info("execute()", "Passing Jet Cleaning");
+
+  const xAOD::JetContainer* inJets(nullptr);
+  RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(inJets, m_inJetContainerName, m_event, m_store, m_debug), "");
+
+  bool passJetCleaning = true;
+  for(auto jet : *inJets){
+    passJetCleaning = (passJetCleaning && jet->auxdata<char>("cleanJet"));
+  }
+
+  if(!passJetCleaning) return EL::StatusCode::SUCCESS;
+
+  FillCutflow("PassJetCleaning");
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Muon Selection, and Z->mumu event selection
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // read input muons
   const xAOD::MuonContainer* inMuons(nullptr);
   RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(inMuons, m_inMuonContainerName, m_event, m_store, m_debug) ,"");
 
+  if(m_debug) Info("execute()", "Passing Muon Selection");
+
+  // muon selection
+  std::vector<const xAOD::Muon*> selectMuons;
+  for(auto muon : *inMuons){
+    // pT, eta
+    if(muon->pt() < 25e3) continue;
+    if(abs(muon->eta()) > 2.4) continue;
+
+    // quality
+    if(m_muonSelection->getQuality(*muon) > xAOD::Muon::Loose) continue;
+
+    // IDCut
+    // if(!m_muonSelection->passedIDCuts(*muon)) continue; // this one will kill all muons ... 
+    if(!muon->passesIDCuts()) continue;
+
+    selectMuons.push_back(muon);
+  }
+
+  // sort muons by pT
+  std::sort(selectMuons.begin(), selectMuons.end(), ZmumuSelector::sort_pt);
+
   // create output muons
   ConstDataVector<xAOD::MuonContainer>* outMuons_Zmumu(nullptr);
   outMuons_Zmumu = new ConstDataVector<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
 
-  std::vector<TLorentzVector> v_Zcandidates;
+  if(m_debug) Info("execute()", "Passing Z->mumu event selection");
 
-  if(m_debug) Info("execute()", "Begin to loop through pairs of muons");
+  // Z->mumu event selection
+  // only two leading selected muons are considered
+  // Zmumu selection reference https://twiki.cern.ch/twiki/bin/view/AtlasProtected/VHFAnalysis2015#Event_selection
+  // Also following Soshi's code: https://svnweb.cern.ch/trac/atlasperf/browser/CombPerf/Tracking/TrackingInDenseEnvironments/SimpleAnaxAOD/trunk/ParticleAnalysis/Root/ZmumuAnalysis.cxx
 
-  // loop through pair of muons
-  // lesson learnt : unsigned int 0 < -1 is a TRUE statement!
-  for(unsigned int iMuon1 = 0; iMuon1 < inMuons->size(); iMuon1++){
-    auto Muon1 = inMuons->at(iMuon1);
-    if(std::find(outMuons_Zmumu->begin(), outMuons_Zmumu->end(), Muon1) != outMuons_Zmumu->end()) continue;
+  if(selectMuons.size() < 2) return EL::StatusCode::SUCCESS;
 
-    for(unsigned int iMuon2 = iMuon1+1 ; iMuon2 < inMuons->size(); iMuon2++){
-      auto Muon2 = inMuons->at(iMuon2);
-      if(std::find(outMuons_Zmumu->begin(), outMuons_Zmumu->end(), Muon2) != outMuons_Zmumu->end()) continue;
+  FillCutflow("PassAtLeastTwoMuons");
 
-      if(Muon1->charge() * Muon2->charge() >= 0) continue;
+  const xAOD::Muon* Muon1_Zmumu = selectMuons[0];
+  const xAOD::Muon* Muon2_Zmumu = selectMuons[1];
 
-      TLorentzVector Zcandidate_4p = Muon1->p4() + Muon2->p4();
-      double Zcandidate_mass = Zcandidate_4p.M();
-      if( (Zcandidate_mass <= 76e3) || (Zcandidate_mass >= 106e3) ) continue;
+  if(Muon1_Zmumu->charge() * Muon2_Zmumu->charge() >= 0) return EL::StatusCode::SUCCESS;
 
-      outMuons_Zmumu->push_back(Muon1);
-      outMuons_Zmumu->push_back(Muon2);
-      v_Zcandidates.push_back(Zcandidate_4p);
-    }
-  }
+  FillCutflow("PassOppositeMuons");
+
+  TLorentzVector Zboson = Muon1_Zmumu->p4() + Muon2_Zmumu->p4();
+  double Zboson_mass = Zboson.M();
+  if( (Zboson_mass <= 76e3) || (Zboson_mass >= 106e3) ) return EL::StatusCode::SUCCESS;
+
+  FillCutflow("PassZMassWindow");
 
   // store output muons
-  if(m_debug) Info("execute()", "Storing Zmumu muon collection");
-  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outMuons_Zmumu, m_outMuonContainerName), "Failed to store const data vector.");
+  outMuons_Zmumu->push_back(Muon1_Zmumu);
+  outMuons_Zmumu->push_back(Muon2_Zmumu);
+  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outMuons_Zmumu, m_outMuonContainerName), "Failed to store muons from Zmumu");
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // extract tracks
-  if(m_debug) Info("execute()", "Storing InDetTracks from Zmumu muons");
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+  if(m_debug) Info("execute()", "Extracting tracks");
+
+  const xAOD::TrackParticleContainer* inTracks(nullptr);
+  RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(inTracks, m_inTrackContainerName, m_event, m_store, m_debug) ,"");
+
+  // muon-tracks
+  if(m_debug) Info("execute()", "Storing muon-tracks");
+
   ConstDataVector<xAOD::TrackParticleContainer>* outTracks_Zmumu(nullptr);
   outTracks_Zmumu = new ConstDataVector<xAOD::TrackParticleContainer>(SG::VIEW_ELEMENTS);
 
@@ -289,25 +375,79 @@ EL::StatusCode ZmumuSelector :: execute ()
       continue;
     }
 
+    if(!TrackSelection(*el_tp)) continue;
+
     outTracks_Zmumu->push_back(*el_tp);
   }
 
-  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outTracks_Zmumu, m_outTrackContainerName), "Failed to store const data vector.");
+  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outTracks_Zmumu, m_outTrackContainerName_Zmumu), "Failed to store Zmumu tracks");
 
+  // jet-tracks
+  if(m_debug) Info("execute()", "Storing jet-tracks");
+
+  ConstDataVector<xAOD::TrackParticleContainer>* outTracks_jet(nullptr);
+  outTracks_jet = new ConstDataVector<xAOD::TrackParticleContainer>(SG::VIEW_ELEMENTS);
+
+  for(auto Jet : *inJets){
+    // // take tracks for b-tagging
+    // auto v_el_tp = Jet->btagging()->auxdata<std::vector<ElementLink<xAOD::TrackParticleContainer> > >("BTagTrackToJetAssociator");
+    // for(auto el_tp : v_el_tp){
+    //   if( (!el_tp.isValid()) || (!(*el_tp)) ){
+    //     if(m_debug) Warning("execute()", "Invalid link to InnerDetectorTrackParticle from Jet b-tagging \"BTagTrackToJetAssociator\" decoration!");
+    //     continue;
+    //   }
+
+    //   if(!TrackSelection(*el_tp)) continue;
+
+    //   outTracks_jet->push_back(*el_tp);
+    // }
+
+    auto v_tracks = Jet->getAssociatedObjects<xAOD::TrackParticle>("GhostTrack");
+    for(auto track : v_tracks){
+      if(!track){
+        if(m_debug) Warning("execute()", "Invalid link to InnerDetectorTrackParticle from Jet \"GhostTrack\" decoration!");
+        continue;
+      }
+
+      if(!TrackSelection(track)) continue;
+
+      outTracks_jet->push_back(track);
+    }
+  }
+
+  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outTracks_jet, m_outTrackContainerName_Jet), "Failed to store tracks inside jet");
+
+  // other-tracks
+  if(m_debug) Info("execute()", "Storing other-tracks");
+
+  ConstDataVector<xAOD::TrackParticleContainer>* outTracks_other(nullptr);
+  outTracks_other = new ConstDataVector<xAOD::TrackParticleContainer>(SG::VIEW_ELEMENTS);
+
+  for(auto Track : *inTracks){
+    // anything that is left
+    if(std::find(outTracks_Zmumu->begin(), outTracks_Zmumu->end(), Track) != outTracks_Zmumu->end()) continue;
+    if(std::find(outTracks_jet->begin(), outTracks_jet->end(), Track) != outTracks_jet->end()) continue;
+
+    if(!TrackSelection(Track)) continue;
+
+    outTracks_other->push_back(Track);
+  }
+
+  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outTracks_other, m_outTrackContainerName_Other), "Failed to store tracks from other places");
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Fill Histograms
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // event histograms
   m_histsvc_event->Reset();
 
-  m_histsvc_event->Set("nMuons", outMuons_Zmumu->size());
-  m_histsvc_event->Set("nZCandidates", v_Zcandidates.size());
+  m_histsvc_event->Set("nJets", inJets->size());
+  m_histsvc_event->Set("nTracks_Zmumu", outTracks_Zmumu->size());
+  m_histsvc_event->Set("nTracks_jet", outTracks_jet->size());
+  m_histsvc_event->Set("nTracks_other", outTracks_other->size());
 
   m_histsvc_event->MakeHists("GoodEvents", "");
-
-  m_histsvc_event->AutoFill("GoodEvents", "", "nRawMuons", inMuons->size(), m_EvtWeight, 20, -0.5, 19.5);
-  for(auto Z : v_Zcandidates){
-    m_histsvc_event->AutoFill("GoodEvents", "", "ZCandidate_mass", Z.M()/1000., m_EvtWeight, 200, 0, 200.);
-  }
 
   // muon histograms
   for(auto Muon : *outMuons_Zmumu){
@@ -317,28 +457,13 @@ EL::StatusCode ZmumuSelector :: execute ()
     m_histsvc_muons->Set("Eta", Muon->eta());
     m_histsvc_muons->Set("Quality_DAOD", Muon->quality());
 
-    m_histsvc_muons->MakeHists("GoodEvents", "GoodMuons");
+    m_histsvc_muons->MakeHists("GoodEvents", "_Muons_Zmumu");
   }
 
   // track histograms
-  for(auto Track : *outTracks_Zmumu){
-    m_histsvc_tracks->Reset();
-
-    m_histsvc_tracks->Set("Pt", Track->pt()/1000.);
-    m_histsvc_tracks->Set("Eta", Track->eta());
-
-    m_histsvc_tracks->MakeHists("GoodEvents", "GoodTracks");
-
-    //////////////////////////////////////////////////////////////
-
-    auto msosVector = GetPixelMeasurements(Track);
-    for(auto msos : msosVector){
-      auto PixelCluster = GetPixelCluster(msos);
-      if(!SelectGoodPixelCluster(PixelCluster)) continue;
-
-      if(!FillHistogramPixelCluster(msos, PixelCluster, Track)) continue;
-    }
-  }
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Zmumu), "Failure in filling tracks from Zmumu");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Jet), "Failure in filling tracks from jet");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Other), "Failure in filling tracks from other places");
 
   return EL::StatusCode::SUCCESS;
 }
@@ -372,6 +497,12 @@ EL::StatusCode ZmumuSelector :: finalize ()
 
   Info("finalize()", "Deleting tool instance ...");
 
+  if(m_muonSelection) {m_muonSelection = 0; delete m_muonSelection;}
+  if(m_histsvc_cutflow) {m_histsvc_cutflow = 0; delete m_histsvc_cutflow;}
+  if(m_histsvc_event) {m_histsvc_event = 0; delete m_histsvc_event;}
+  if(m_histsvc_muons) {m_histsvc_muons = 0; delete m_histsvc_muons;}
+  if(m_histsvc_tracks) {m_histsvc_tracks = 0; delete m_histsvc_tracks;}
+  if(m_histsvc_pixelclusters) {m_histsvc_pixelclusters = 0; delete m_histsvc_pixelclusters;}
 
   return EL::StatusCode::SUCCESS;
 }
@@ -400,9 +531,13 @@ bool ZmumuSelector :: HistSvcInit()
 {
   if(m_debug) Info("HistSvcInit()", "Entering HistSvcInit.");
 
+  m_histsvc_cutflow = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
+
   m_histsvc_event = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
-  m_histsvc_event->Book("nMuons", "nMuons", &m_EvtWeight, 20, -0.5, 19.5);
-  m_histsvc_event->Book("nZCandidates", "nZCandidates", &m_EvtWeight, 10, -0.5, 9.5);
+  m_histsvc_event->Book("nJets", "nJets", &m_EvtWeight, 50, -0.5, 49.5);
+  m_histsvc_event->Book("nTracks_Zmumu", "nTracks_Zmumu", &m_EvtWeight, 20, -0.5, 19.5);
+  m_histsvc_event->Book("nTracks_jet", "nTracks_jet", &m_EvtWeight, 2000, -0.5, 1999.5);
+  m_histsvc_event->Book("nTracks_other", "nTracks_other", &m_EvtWeight, 2000, -0.5, 1999.5);
 
   m_histsvc_muons = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
   m_histsvc_muons->Book("Pt", "Pt", &m_EvtWeight, 500, 0, 500);
@@ -419,6 +554,49 @@ bool ZmumuSelector :: HistSvcInit()
   if(m_debug) Info("HistSvcInit()", "Leaving HistSvcInit.");
 
   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Cutflow
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool ZmumuSelector :: FillCutflow(std::string cutname)
+{
+  m_histsvc_cutflow->AutoFill("Cutflow", "", "CountEntry_"+cutname, 0, 1, 1, -0.5, 0.5);
+  m_histsvc_cutflow->AutoFill("Cutflow", "", "CountWeight_"+cutname, 0, m_EvtWeight, 1, -0.5, 0.5);
+
+  return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Fill Tracks
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+StatusCode ZmumuSelector :: FillHistogramTracks(std::string TrackContainerName)
+{
+  // fetch track collection
+  const xAOD::TrackParticleContainer* TracksToFill(nullptr);
+  RETURN_CHECK("ZmumuSelector::FillHistogramTracks()", HelperFunctions::retrieve(TracksToFill, TrackContainerName, m_event, m_store, m_debug), "");
+
+  for(auto Track : *TracksToFill){
+    // tracks
+    m_histsvc_tracks->Reset();
+
+    m_histsvc_tracks->Set("Pt", Track->pt()/1000.);
+    m_histsvc_tracks->Set("Eta", Track->eta());
+
+    m_histsvc_tracks->MakeHists("GoodEvents", "_"+TrackContainerName);
+
+    // pixel clusters
+    auto msosVector = GetPixelMeasurements(Track);
+    for(auto msos : msosVector){
+      auto PixelCluster = GetPixelCluster(msos);
+      if(!SelectGoodPixelCluster(PixelCluster)) continue;
+      if(!FillHistogramPixelCluster(TrackContainerName, msos, PixelCluster, Track)) continue;
+    }
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -539,7 +717,7 @@ bool ZmumuSelector :: BookHistogramPixelCluster(Analysis_AutoHists* histsvc)
   return true;
 }
 
-bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation* msos, const xAOD::TrackMeasurementValidation* PixelCluster, const xAOD::TrackParticle* Track)
+bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, const xAOD::TrackStateValidation* msos, const xAOD::TrackMeasurementValidation* PixelCluster, const xAOD::TrackParticle* Track)
 {
   // Reset
   m_histsvc_pixelclusters->Reset();
@@ -649,7 +827,7 @@ bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation
   // finalize
   ///////////////////////////////////////////////////////////////
 
-  TString ContainerTag = "GoodEvents";
+  TString ContainerTag = "GoodEvents_"+TrackContainerName;
   TString PixelClusterTag = "_PixelCluster";
 
   // bec
@@ -682,18 +860,14 @@ bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation
 
   // pt
   TString PtTag = "_Pt";
-  if( (m_histsvc_pixelclusters->Get("trkPt") >= 1.) && (m_histsvc_pixelclusters->Get("trkPt") < 3.) )
+  if( (m_histsvc_pixelclusters->Get("trkPt") >= 1.) && (m_histsvc_pixelclusters->Get("trkPt") < 5.) )
     PtTag += "0";
-  else if( (m_histsvc_pixelclusters->Get("trkPt") >= 3.) && (m_histsvc_pixelclusters->Get("trkPt") < 5.) )
+  else if( (m_histsvc_pixelclusters->Get("trkPt") >= 5.) && (m_histsvc_pixelclusters->Get("trkPt") < 10.) )
     PtTag += "1";
-  else if( (m_histsvc_pixelclusters->Get("trkPt") >= 5.) && (m_histsvc_pixelclusters->Get("trkPt") < 7.) )
-    PtTag += "2";
-  else if( (m_histsvc_pixelclusters->Get("trkPt") >= 7.) && (m_histsvc_pixelclusters->Get("trkPt") < 10.) )
-    PtTag += "3";
   else if( (m_histsvc_pixelclusters->Get("trkPt") >= 10.) && (m_histsvc_pixelclusters->Get("trkPt") < 25.) )
-    PtTag += "4";
+    PtTag += "2";
   else if(m_histsvc_pixelclusters->Get("trkPt") >= 25.)
-    PtTag += "5";
+    PtTag += "3";
   else
     PtTag += "None";
 
@@ -704,7 +878,7 @@ bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation
   else if(fabs(m_histsvc_pixelclusters->Get("trkEta")) < 2.5)
     EtaTag += "1";
   else
-    EtaTag += "-1";
+    EtaTag += "None";
 
   // cluster size
   TString SizeTag = "_N";
@@ -726,6 +900,30 @@ bool ZmumuSelector :: FillHistogramPixelCluster(const xAOD::TrackStateValidation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Auxiliary Functions 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool ZmumuSelector :: TrackSelection(const xAOD::TrackParticle* Track)
+{
+  // kinematic cuts
+  if(Track->pt() < 1e3) return false;
+  if(abs(Track->eta()) > 2.5) return false;
+
+  // quality cut
+  uint8_t getInt(0);
+  int nSiHits = numberOfSiHits(Track);
+  Track->summaryValue(getInt,xAOD::numberOfPixelSharedHits);
+  int nPixSharedHits = getInt;
+  Track->summaryValue(getInt,xAOD::numberOfSCTSharedHits);
+  int nSCTSharedHits = getInt;
+  Track->summaryValue(getInt,xAOD::numberOfPixelHoles);
+  int nPixHoles = getInt;
+  Track->summaryValue(getInt,xAOD::numberOfSCTHoles);
+  int nSCTHoles = getInt;
+
+  if (!( (nSiHits >= 7) && (nPixSharedHits + nSCTSharedHits <= 1) && (nPixHoles + nSCTHoles <= 2) && (nPixHoles <= 1) )) return false;
+
+  // good to go
+  return true;
+}
 
 std::vector<const xAOD::TrackStateValidation*> ZmumuSelector :: GetPixelMeasurements(const xAOD::TrackParticle* Track)
 {
@@ -778,4 +976,26 @@ bool ZmumuSelector :: SelectGoodPixelCluster(const xAOD::TrackMeasurementValidat
   if(PixelCluster->auxdata<int>("isSplit") == 1) return false;
 
   return true;
+}
+
+// copy from https://svnweb.cern.ch/trac/atlasperf/browser/CombPerf/Tracking/TrackingInDenseEnvironments/SimpleAnaxAOD/trunk/HistManager/Root/TrackHelper.cxx
+int ZmumuSelector :: numberOfSiHits(const xAOD::TrackParticle* trkPart)
+{
+  if(!trkPart) { return 0; }
+
+  uint8_t tmp(0);
+  int nSiHits(0);
+
+  if( trkPart->summaryValue(tmp, xAOD::numberOfPixelHits) ) { nSiHits += tmp; }
+  else {
+    Info("ZmumuSelector::numberOfSiHits", "numberOfPixelHits is not stored in TrackParticle object");
+    return -1;
+  }
+  if( trkPart->summaryValue(tmp, xAOD::numberOfSCTHits   ) ) { nSiHits += tmp; }
+  else {
+    Info("ZmumuSelector::numberOfSiHits", "numberOfSCTHits is not stored in TrackParticle object");
+    return -1;
+  }
+
+  return nSiHits;
 }
