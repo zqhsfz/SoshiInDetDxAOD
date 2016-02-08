@@ -439,7 +439,10 @@ EL::StatusCode ZmumuSelector :: execute ()
   // Fill Histograms
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  if(m_debug) Info("execute()", "Begin filling histograms");
+
   // event histograms
+  if(m_debug) Info("execute()", "Filling event histograms");
   m_histsvc_event->Reset();
 
   m_histsvc_event->Set("nJets", inJets->size());
@@ -450,6 +453,7 @@ EL::StatusCode ZmumuSelector :: execute ()
   m_histsvc_event->MakeHists("GoodEvents", "");
 
   // muon histograms
+  if(m_debug) Info("execute()", "Filling muon histograms");
   for(auto Muon : *outMuons_Zmumu){
     m_histsvc_muons->Reset();
 
@@ -461,9 +465,10 @@ EL::StatusCode ZmumuSelector :: execute ()
   }
 
   // track histograms
-  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Zmumu), "Failure in filling tracks from Zmumu");
-  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Jet), "Failure in filling tracks from jet");
-  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Other), "Failure in filling tracks from other places");
+  if(m_debug) Info("execute()", "Filling track histograms");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Zmumu), "Failure when filling track histograms");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Jet), "Failure when filling track histograms");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Other), "Failure when filling track histograms");
 
   return EL::StatusCode::SUCCESS;
 }
@@ -574,6 +579,8 @@ bool ZmumuSelector :: FillCutflow(std::string cutname)
 
 StatusCode ZmumuSelector :: FillHistogramTracks(std::string TrackContainerName)
 {
+  if(m_debug) Info("FillHistogramTracks()", "Begin fill track container %s", TrackContainerName.c_str());
+
   // fetch track collection
   const xAOD::TrackParticleContainer* TracksToFill(nullptr);
   RETURN_CHECK("ZmumuSelector::FillHistogramTracks()", HelperFunctions::retrieve(TracksToFill, TrackContainerName, m_event, m_store, m_debug), "");
@@ -719,6 +726,8 @@ bool ZmumuSelector :: BookHistogramPixelCluster(Analysis_AutoHists* histsvc)
 
 bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, const xAOD::TrackStateValidation* msos, const xAOD::TrackMeasurementValidation* PixelCluster, const xAOD::TrackParticle* Track)
 {
+  if(m_debug) Info("FillHistogramPixelCluster()", "Filling histograms for Pixel Cluster");
+
   // Reset
   m_histsvc_pixelclusters->Reset();
 
@@ -927,26 +936,53 @@ bool ZmumuSelector :: TrackSelection(const xAOD::TrackParticle* Track)
 
 std::vector<const xAOD::TrackStateValidation*> ZmumuSelector :: GetPixelMeasurements(const xAOD::TrackParticle* Track)
 {
+  if(m_debug) Info("GetPixelMeasurements()", "Begin retrieving pixel measurements ...");
+
   std::vector<const xAOD::TrackStateValidation*> output;
+
+  std::cout << "1" << std::endl;
 
   std::string msosLink("msosLink");
   auto msosLinkVector = Track->auxdata< std::vector<ElementLink< xAOD::TrackStateValidationContainer > > >(msosLink);
 
   for(auto msosLink : msosLinkVector){
+    std::cout << "2" << std::endl;
     // make sure the link is valid
-    if( (!msosLink.isValid()) || ((*msosLink) == 0) ){
-      Warning("GetPixelMeasurements()", "Invalid link to msos of track.");
-      continue;
-    }
+    // if( (!msosLink.isValid()) || ((*msosLink) == 0) ){
+    // if( (*msosLink) == 0 ){
+    //   Warning("GetPixelMeasurements()", "Invalid link to msos of track.");
+    //   continue;
+    // }
+
+    std::cout << "3" << std::endl;
 
     const xAOD::TrackStateValidation* msos = (*msosLink);
 
     // make sure it is a measurement on pixel detector (pixel + IBL)
+    std::cout << "a" << std::endl;
+    try{
+      auto a = msos->detType();
+    }
+    catch(...){
+      std::cout << "Problem in detType()!" << std::endl;
+    }
+
+    std::cout << "b" << std::endl;
+    try{
+      auto b = msos->type();
+    }
+    catch(...){
+      std::cout << "Problem in type()!" << std::endl;
+    }
+
+    std::cout << "c" << std::endl;
     if( (msos->detType() != TrackState::Pixel)  ||  (msos->type() != TrackStateOnSurface::Measurement) ) continue;
 
     // done
     output.push_back(msos);
   }
+
+  if(m_debug) Info("GetPixelMeasurements()", "Leaving GetPixelMeasurements ...");
 
   return output;
 }
