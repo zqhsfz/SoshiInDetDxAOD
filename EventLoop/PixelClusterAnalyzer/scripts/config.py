@@ -8,7 +8,7 @@ c = xAH_config()
 
 c.setalg("BasicEventSelection", {
 	                              "m_name"                  : "basicEventSel",
-	                              "m_debug"                 : True,
+	                              "m_debug"                 : False,
 	                              "m_truthLevelOnly"        : False,
 	                              # "m_derivationName"        : 
 	                              "m_useMetaData"           : False,
@@ -27,14 +27,14 @@ c.setalg("BasicEventSelection", {
 
 c.setalg("MuonCalibrator", {
 	                         "m_name"                : "Muons",
-	                         "m_debug"               : True,
+	                         "m_debug"               : False,
 	                         "m_inContainerName"     : "Muons",
 	                         "m_outContainerName"    : "Muons_Calib",
 	                         "m_outputAlgoSystNames" : "MuonCalibrator_Syst",
 	                       })
 
 c.setalg("JetCalibrator", { "m_name"                   : "AntiKt4TopoEM", 
-	                        "m_debug"                  : True,
+	                        "m_debug"                  : False,
 	                        "m_inContainerName"        : "AntiKt4EMTopoJets",
 	                        "m_outContainerName"       : "AntiKt4EMTopoJets_Calib", 
 	                        "m_sort"                   : True,
@@ -58,7 +58,7 @@ c.setalg("JetCalibrator", { "m_name"                   : "AntiKt4TopoEM",
 
 c.setalg("JetSelector", {
 	                      "m_name"                    : "SelectAntiKt4TopoEM",
-	                      "m_debug"                   : True,
+	                      "m_debug"                   : False,
 	                      "m_inContainerName"         : "AntiKt4EMTopoJets_Calib",
 	                      "m_inputAlgo"               : "AntiKt4EMTopoJets_Calib_Algo",
 	                      "m_outContainerName"        : "AntiKt4EMTopoJets_Calib_Selected",
@@ -76,7 +76,7 @@ c.setalg("JetSelector", {
 # todo: muon efficiency SF, calo-jet and jet-muon OR
 
 c.setalg("ZmumuSelector", {
-	                        "m_debug"                        : True,
+	                        "m_debug"                        : False,
 
 	                        "m_inMuonContainerName"          : "Muons_Calib",
 	                        "m_outMuonContainerName"         : "Muons_Zmumu",

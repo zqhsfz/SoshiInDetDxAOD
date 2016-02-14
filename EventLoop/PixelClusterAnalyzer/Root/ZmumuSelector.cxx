@@ -552,6 +552,9 @@ bool ZmumuSelector :: HistSvcInit()
   m_histsvc_tracks = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
   m_histsvc_tracks->Book("Pt", "Pt", &m_EvtWeight, 500, 0, 500);
   m_histsvc_tracks->Book("Eta", "Eta", &m_EvtWeight, 60, -3, 3);
+  m_histsvc_tracks->Book("Pt_d0", "Pt", "d0", &m_EvtWeight, 500, 0, 500, 200, -1, 1);
+  m_histsvc_tracks->Book("Pt_z0", "Pt", "z0", &m_EvtWeight, 500, 0, 500, 400, -2, 2);
+  m_histsvc_tracks->Book("Pt_z0sintheta", "Pt", "z0sintheta", &m_EvtWeight, 500, 0, 500, 400, -2, 2);
 
   m_histsvc_pixelclusters = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
   BookHistogramPixelCluster(m_histsvc_pixelclusters);
@@ -591,6 +594,11 @@ StatusCode ZmumuSelector :: FillHistogramTracks(std::string TrackContainerName)
 
     m_histsvc_tracks->Set("Pt", Track->pt()/1000.);
     m_histsvc_tracks->Set("Eta", Track->eta());
+    m_histsvc_tracks->Set("d0", Track->d0());
+
+    double dz = Track->z0() + Track->vz() - m_PrimaryVertex->z();
+    m_histsvc_tracks->Set("z0", dz);
+    m_histsvc_tracks->Set("z0sintheta", dz * TMath::Sin(Track->theta()));
 
     m_histsvc_tracks->MakeHists("GoodEvents", "_"+TrackContainerName);
 
@@ -614,10 +622,12 @@ bool ZmumuSelector :: BookHistogramPixelCluster(Analysis_AutoHists* histsvc)
 {
   // Hit Summary
   histsvc->Book("Charge", "Charge", &m_EvtWeight, 100, 0., 5e5);
+  histsvc->Book("Charge90", "Charge90", &m_EvtWeight, 100, 0., 5e5);
   histsvc->Book("SumCharge", "SumCharge", &m_EvtWeight, 100, 0., 5e5);
   histsvc->Book("EnergyLoss", "EnergyLoss", &m_EvtWeight, 100, 0, 1000.);
   histsvc->Book("SumEnergyLoss", "SumEnergyLoss", &m_EvtWeight, 100, 0, 1000.);
   histsvc->Book("ToT", "ToT", &m_EvtWeight, 200, 0., 1000.);
+  histsvc->Book("ToTNonZero", "ToTNonZero", &m_EvtWeight, 200, 0., 1000.);
   histsvc->Book("LogCharge", "LogCharge", &m_EvtWeight, 500, -8., 8.);
   histsvc->Book("isFake", "isFake", &m_EvtWeight, 2, -0.5, 1.5);
   histsvc->Book("isGanged", "isGanged", &m_EvtWeight, 2, -0.5, 1.5);
@@ -736,8 +746,10 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
 
   // hit summary
   m_histsvc_pixelclusters->Set("Charge", PixelCluster->auxdata<float>("charge"));
+  m_histsvc_pixelclusters->Set("Charge90", 0.9 * PixelCluster->auxdata<float>("charge"));
   m_histsvc_pixelclusters->Set("EnergyLoss", PixelCluster->auxdata<float>("charge")*3.62/1000.);   // corresponding energy loss (in keV) to produce such amount of charge
   m_histsvc_pixelclusters->Set("ToT", PixelCluster->auxdata<int>("ToT"));
+  if(PixelCluster->auxdata<int>("ToT") > 0.01) m_histsvc_pixelclusters->Set("ToTNonZero", PixelCluster->auxdata<int>("ToT"));
   m_histsvc_pixelclusters->Set("LogCharge", TMath::Log10(PixelCluster->auxdata<float>("charge")));
   m_histsvc_pixelclusters->Set("isFake", PixelCluster->auxdata<char>("isFake"));
   m_histsvc_pixelclusters->Set("isGanged", PixelCluster->auxdata<char>("gangedPixel"));
@@ -940,42 +952,19 @@ std::vector<const xAOD::TrackStateValidation*> ZmumuSelector :: GetPixelMeasurem
 
   std::vector<const xAOD::TrackStateValidation*> output;
 
-  std::cout << "1" << std::endl;
-
   std::string msosLink("msosLink");
   auto msosLinkVector = Track->auxdata< std::vector<ElementLink< xAOD::TrackStateValidationContainer > > >(msosLink);
 
   for(auto msosLink : msosLinkVector){
-    std::cout << "2" << std::endl;
     // make sure the link is valid
-    // if( (!msosLink.isValid()) || ((*msosLink) == 0) ){
-    // if( (*msosLink) == 0 ){
-    //   Warning("GetPixelMeasurements()", "Invalid link to msos of track.");
-    //   continue;
-    // }
-
-    std::cout << "3" << std::endl;
+    if( (!msosLink.isValid()) || ((*msosLink) == 0) ){
+      Warning("GetPixelMeasurements()", "Invalid link to msos of track.");
+      continue;
+    }
 
     const xAOD::TrackStateValidation* msos = (*msosLink);
 
     // make sure it is a measurement on pixel detector (pixel + IBL)
-    std::cout << "a" << std::endl;
-    try{
-      auto a = msos->detType();
-    }
-    catch(...){
-      std::cout << "Problem in detType()!" << std::endl;
-    }
-
-    std::cout << "b" << std::endl;
-    try{
-      auto b = msos->type();
-    }
-    catch(...){
-      std::cout << "Problem in type()!" << std::endl;
-    }
-
-    std::cout << "c" << std::endl;
     if( (msos->detType() != TrackState::Pixel)  ||  (msos->type() != TrackStateOnSurface::Measurement) ) continue;
 
     // done

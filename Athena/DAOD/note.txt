@@ -1,3 +1,4 @@
 - Transform ESD to InDetDxAOD
-- Use release 20.1.8.5
+- Use release 20.7.3.8
+- Need a more updated version of xAODTracking in order to be compatible with offline AnalysisBase 20.7 release
 - Simply put ESD as input, specify InDetDxAOD as output, and use Reco_tf

@@ -1,0 +1,11 @@
+###########################
+# Version 00-00-00
+#
+# Data: Provided by Soshi, reconstructed in 20.1, /eos/atlas/user/s/stsuno/b-layer_latency_2015/ZMUMU/data/default/281411/
+# MC: use incomplete HITS file produced by Soshi (270 files), Digi / Recon / DAOD in the version and configuration specified in this setup.sh / checkout.sh
+#   : user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v1_Nominal.try2_EXT0
+#   : user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v1_Nominal.try2_EXT0
+# EventLoop: Z->mumu selection for analysis purpose. xAH version is HTopMultilep-00-01-06-17-g7d8d9fa (7d8d9fa1514ced97f42d1f783dce82f5e5dc91f7)
+###########################
+
+
