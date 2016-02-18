@@ -21,6 +21,8 @@
 #include "BichselSimTool.h"
 #include "TLorentzVector.h"
 
+#include "time.h"
+
 using namespace InDetDD;
 
 
@@ -87,6 +89,8 @@ StatusCode PixelBarrelBichselChargeTool::initialize() {
   if(m_doHITPlots){
     f_output = new TFile(m_OutputFileName.data(), "RECREATE");
 
+    ATH_MSG_INFO("Initializing diagnosing root file ...");
+
     h_Length = new TH1D("Length", "Length", 500, 0, 1000);
     h_EnergyDepositionNominal = new TH1D("EnergyDepositionNominal", "EnergyDepositionNominal", 500, 0, 1000);
     h_EnergyDepositionBichsel = new TH1D("EnergyDepositionBichsel", "EnergyDepositionBichsel", 500, 0, 1000);
@@ -127,6 +131,13 @@ StatusCode PixelBarrelBichselChargeTool::initialize() {
     h_dEdxMomentumMap_Nominal["electron"] = new TH2D("Momentum_dEdx_Nominal_electron", "Momentum_dEdx_Nominal_electron", 400, -1, 3, 600, 0, 3000);
     h_dEdxMomentumMap_Nominal["kaon"] = new TH2D("Momentum_dEdx_Nominal_kaon", "Momentum_dEdx_Nominal_kaon", 400, -1, 3, 600, 0, 3000);
     h_dEdxMomentumMap_Nominal["muon"] = new TH2D("Momentum_dEdx_Nominal_muon", "Momentum_dEdx_Nominal_muon", 400, -1, 3, 600, 0, 3000);
+
+    // timers
+    h_timer_execute = new TH1D("timer_execute", "timer_execute", 10000, 0, 10);
+    h_timer_BichselSim = new TH1D("timer_BichselSim", "timer_BichselSim", 10000, 0, 10);
+    h_timer_DigiLayer = new TH1D("timer_DigiLayer", "timer_DigiLayer", 10000, 0, 10);
+    h_timer_diffuse = new TH1D("timer_diffuse", "timer_diffuse", 10000, 0, 10);
+    h_timer_diffusePerCharge = new TH1D("timer_diffusePerCharge", "timer_diffusePerCharge", 10000, 0, 10);
   }
   
 
@@ -159,6 +170,8 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
 		  SiChargedDiodeCollection& chargedDiodes,
 		  const InDetDD::SiDetectorElement &Module)
 {
+  // clock_t timer_execute = clock();
+
   ATH_MSG_DEBUG("Applying PixelBarrel charge processor");
   const HepMcParticleLink McLink = HepMcParticleLink(phit->particleLink());
   const HepMC::GenParticle* genPart= McLink.cptr(); 
@@ -235,6 +248,7 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
   } 
 
   bool m_isRealBichsel = false;
+  // clock_t timer_DigiLayer = clock();
   if(ParticleType != -1){ // yes, good to go with Bichsel
     // I don't know why genPart->momentum() goes crazy ... 
     TLorentzVector genPart_4V;
@@ -254,7 +268,13 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
     //double iTotalLength = length*1000.;   // mm -> micrometer
 
     // begin simulation
+    // clock_t timer_BichselSim = clock();
     std::vector<std::pair<double,double> > rawHitRecord = m_BichselSimTool->BichselSim(iBetaGamma, iParticleType, iTotalLength, genPart ? (genPart->momentum().e()/CLHEP::MeV) : (phit->energyLoss()/CLHEP::MeV) );
+    // timer_BichselSim = clock() - timer_BichselSim;
+    // if(m_doHITPlots){
+    //  h_timer_BichselSim->Fill( 1000.*((float)timer_BichselSim)/CLOCKS_PER_SEC );
+    //  std::cout << "timer BichselSim " << timer_BichselSim << std::endl;
+    //}
 
     // check if returned simulation result makes sense
     if(rawHitRecord.size() == 0){ // deal with rawHitRecord==0 specifically -- no energy deposition
@@ -282,6 +302,12 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
         trfHitRecord.push_back(specialHit);
     }
   }
+
+  // timer_DigiLayer = clock() - timer_DigiLayer;
+  // if(m_doHITPlots){
+  //   h_timer_DigiLayer->Fill( 1000.*((float)timer_DigiLayer)/CLOCKS_PER_SEC );
+  //   std::cout << "timer DigiLayer " << timer_DigiLayer << std::endl;
+  // }
 
   // *** Finsih Bichsel *** //
 
@@ -394,6 +420,8 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
 
   // *** Now diffuse charges to surface *** //
 
+  // clock_t timer_diffuse = clock();
+
   for(unsigned int istep = 0; istep < trfHitRecord.size(); istep++){
     std::pair<double,double> iHitRecord = trfHitRecord[istep];
 
@@ -410,6 +438,8 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
     if (spess<0) spess=0;
       
     for(int i=0 ; i<ncharges ; i++) {
+
+      // clock_t timer_diffusePerCharge = clock();
   
       // diffusion sigma
       double rdif=this->m_diffusionConstant*sqrt(spess*coLorentz/0.3);
@@ -435,8 +465,26 @@ StatusCode PixelBarrelBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
 	    if (diode.isValid()) {
         chargedDiodes.add(diode,charge);
       }
+
+      // timer_diffusePerCharge = clock() - timer_diffusePerCharge;
+      // if(m_doHITPlots){
+      //   h_timer_diffusePerCharge->Fill( 1000.*((float)timer_diffusePerCharge)/CLOCKS_PER_SEC );
+      //   // std::cout << "timer diffusePerCharge " << 1000.*((float)timer_diffusePerCharge)/CLOCKS_PER_SEC << std::endl;
+      // }
     }									
   }
+
+  // timer_diffuse = clock() - timer_diffuse;
+  // if(m_doHITPlots){
+  //   h_timer_diffuse->Fill( 1000.*((float)timer_diffuse)/CLOCKS_PER_SEC );
+  //   std::cout << "timer diffuse " << timer_diffuse << std::endl;
+  // }
+
+  // timer_execute = clock() - timer_execute;
+  // if(m_doHITPlots){
+  //   h_timer_execute->Fill( 1000.*((float)timer_execute)/CLOCKS_PER_SEC );
+  //   std::cout << "timer execute " << timer_execute << std::endl;
+  // }
 
 	return StatusCode::SUCCESS;
 }
