@@ -1,7 +1,7 @@
 # checkout packges
 pkgco.py DerivationFrameworkInDet
 pkgco.py InDetPrepRawDataToxAOD
-pkgco.py xAODTracking-00-13-24
+# pkgco.py xAODTracking-00-13-24
 
 # apply patches
 echo "Applying patches ..."
