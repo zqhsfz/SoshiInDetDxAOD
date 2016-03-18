@@ -1,8 +1,12 @@
 from AthenaCommon import CfgMgr
 from Digitization.DigitizationFlags import digitizationFlags
 
-_doBichsel = ( hasattr(digitizationFlags, "doBichselSimulation") and digitizationFlags.doBichselSimulation() )
-# _doBichsel = True
+# _doBichsel = ( hasattr(digitizationFlags, "doBichselSimulation") and digitizationFlags.doBichselSimulation() )
+_doProduction = True
+_doBichsel = True
+_doEC = False
+_doBichselPU = True
+_nCols = 5
 
 # The earliest bunch crossing time for which interactions will be sent
 # to the Pixel Digitization code.
@@ -29,7 +33,7 @@ def ChargeCollProbSvc(name="ChargeCollProbSvc", **kwargs):
     return CfgMgr.ChargeCollProbSvc(name, **kwargs)
 
 def SurfaceChargesTool(name="SurfaceChargesTool", **kwargs):
-    if _doBichsel:
+    if (not _doProduction) or (_doProduction and _doBichsel):
     # if True:
         kwargs.setdefault("PixelBarrelChargeTool","PixelBarrelBichselChargeTool")
         kwargs.setdefault("PixelECChargeTool","PixelECBichselChargeTool")
@@ -52,26 +56,28 @@ def DBMChargeTool(name="DBMChargeTool", **kwargs):
 
 def BichselSimTool(name="BichselSimTool", **kwargs):
     kwargs.setdefault("DeltaRayCut", 117.)
+    kwargs.setdefault("nCols", _nCols)
+    kwargs.setdefault("LoopLimit", 100000)
     return CfgMgr.BichselSimTool(name, **kwargs)
 
 def PixelBarrelBichselChargeTool(name="PixelBarrelBichselChargeTool", **kwargs):
     kwargs.setdefault("RndmSvc", digitizationFlags.rndmSvc())
     kwargs.setdefault("RndmEngine", "PixelDigitization")
     kwargs.setdefault("doBichsel", _doBichsel)
-    # kwargs.setdefault("doBichsel", False)
     kwargs.setdefault("doBichselBetaGammaCut", 0.7)   # dEdx not quite consistent below this
     kwargs.setdefault("doDeltaRay", False)            # needs validation
+    kwargs.setdefault("doPU", _doBichselPU)                  # to save CPU time
     kwargs.setdefault("BichselSimTool", "BichselSimTool")
     # kwargs.setdefault("OutputFileName", digitizationFlags.BichselOutputFileName())
-    # kwargs.setdefault("doHITPlots", True)
+    kwargs.setdefault("doHITPlots", (not _doProduction))
     return CfgMgr.PixelBarrelBichselChargeTool(name, **kwargs)
 
 def PixelECBichselChargeTool(name="PixelECBichselChargeTool", **kwargs):
     kwargs.setdefault("RndmSvc", digitizationFlags.rndmSvc())
     kwargs.setdefault("RndmEngine", "PixelDigitization")
-    kwargs.setdefault("doBichsel", _doBichsel)
-    # kwargs.setdefault("doBichsel", False)
+    kwargs.setdefault("doBichsel", _doEC)             # to save CPU time
     kwargs.setdefault("doBichselBetaGammaCut", 0.7)   # dEdx not quite consistent below this
+    kwargs.setdefault("doPU", _doBichselPU)                  # to save CPU time
     kwargs.setdefault("BichselSimTool", "BichselSimTool")
     return CfgMgr.PixelECBichselChargeTool(name, **kwargs)
 
@@ -81,6 +87,7 @@ def IblPlanarBichselChargeTool(name="IblPlanarBichselChargeTool", **kwargs):
     kwargs.setdefault("doBichsel", _doBichsel)
     kwargs.setdefault("doBichselBetaGammaCut", 0.7)   # dEdx not quite consistent below this
     kwargs.setdefault("doDeltaRay", False)            # needs validation
+    kwargs.setdefault("doPU", _doBichselPU)                  # to save CPU time
     kwargs.setdefault("BichselSimTool", "BichselSimTool")
     return CfgMgr.IblPlanarBichselChargeTool(name, **kwargs)
 
@@ -90,6 +97,7 @@ def Ibl3DBichselChargeTool(name="Ibl3DBichselChargeTool", **kwargs):
     kwargs.setdefault("doBichsel", _doBichsel)
     kwargs.setdefault("doBichselBetaGammaCut", 0.7)   # dEdx not quite consistent below this
     kwargs.setdefault("doDeltaRay", False)            # needs validation
+    kwargs.setdefault("doPU", _doBichselPU)                  # to save CPU time
     kwargs.setdefault("BichselSimTool", "BichselSimTool")
     return CfgMgr.Ibl3DBichselChargeTool(name, **kwargs)
 

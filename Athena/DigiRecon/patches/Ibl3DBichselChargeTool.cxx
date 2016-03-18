@@ -32,6 +32,7 @@ Ibl3DBichselChargeTool::Ibl3DBichselChargeTool(const std::string& type, const st
         m_doBichsel(false),
         m_doBichselBetaGammaCut(0.1),        // momentum cut on beta-gamma
         m_doDeltaRay(false),                 // need validation
+        m_doPU(true),
         m_BichselSimTool("BichselSimTool")
 { 
 	declareProperty("ChargeCollProbSvc",m_chargeCollSvc);
@@ -39,6 +40,7 @@ Ibl3DBichselChargeTool::Ibl3DBichselChargeTool(const std::string& type, const st
   declareProperty("doBichsel", m_doBichsel, "re-do charge deposition following Bichsel model");
   declareProperty("doBichselBetaGammaCut", m_doBichselBetaGammaCut, "minimum beta-gamma for particle to be re-simulated through Bichsel Model");
   declareProperty("doDeltaRay", m_doDeltaRay, "whether we simulate delta-ray using Bichsel model");
+  declareProperty("doPU", m_doPU, "whether we apply Bichsel model on PU");
   declareProperty("BichselSimTool", m_BichselSimTool, "tool that implements Bichsel model");
 }
 
@@ -107,7 +109,7 @@ StatusCode Ibl3DBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
 		  const InDetDD::SiDetectorElement &Module)
 { 
   ATH_MSG_VERBOSE("Applying IBL3D charge processor");
-  const HepMcParticleLink McLink = HepMcParticleLink(phit->trackNumber(),phit.eventId());
+  const HepMcParticleLink McLink = HepMcParticleLink(phit->particleLink());
   const HepMC::GenParticle* genPart= McLink.cptr(); 
   bool delta_hit = true;
   if (genPart) delta_hit = false;
@@ -183,6 +185,11 @@ StatusCode Ibl3DBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
         double iBetaGamma = TMath::Sqrt(k*(2*m+k))/m;
 
         if(iBetaGamma < m_doBichselBetaGammaCut) ParticleType = -1;
+      }
+
+      // PU
+      if(!m_doPU){
+        if(phit.eventId() != 0) ParticleType = -1;
       }
 
     }

@@ -33,6 +33,7 @@ IblPlanarBichselChargeTool::IblPlanarBichselChargeTool(const std::string& type, 
   m_doBichsel(false),
   m_doBichselBetaGammaCut(0.1),        // momentum cut on beta-gamma
   m_doDeltaRay(false),                 // need validation
+  m_doPU(true),
   m_BichselSimTool("BichselSimTool")
 { 
 	declareProperty("numberOfSteps",m_numberOfSteps,"Geant4:number of steps for IblPlanar");
@@ -41,6 +42,7 @@ IblPlanarBichselChargeTool::IblPlanarBichselChargeTool(const std::string& type, 
   declareProperty("doBichsel", m_doBichsel, "re-do charge deposition following Bichsel model");
   declareProperty("doBichselBetaGammaCut", m_doBichselBetaGammaCut, "minimum beta-gamma for particle to be re-simulated through Bichsel Model");
   declareProperty("doDeltaRay", m_doDeltaRay, "whether we simulate delta-ray using Bichsel model");
+  declareProperty("doPU", m_doPU, "wheter we apply Bichsel model on PU");
   declareProperty("BichselSimTool", m_BichselSimTool, "tool that implements Bichsel model");
 }
 
@@ -181,6 +183,10 @@ StatusCode IblPlanarBichselChargeTool::charge(const TimedHitPtr<SiHit> &phit,
         double iBetaGamma = TMath::Sqrt(k*(2*m+k))/m;
 
         if(iBetaGamma < m_doBichselBetaGammaCut) ParticleType = -1;
+      }
+
+      if(!m_doPU){
+        if(phit.eventId() != 0) ParticleType = -1;
       }
 
     }

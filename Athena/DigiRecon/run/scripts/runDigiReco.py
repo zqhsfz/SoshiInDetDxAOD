@@ -67,9 +67,13 @@ def runLocal(config, printOnly=False):
 	# extraTrfOptions["inputLowPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/Work/PixelCluster/SoshiZmumuFramework/samples/user.qzeng.mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1.try1_EXT0/user.qzeng.7485559.EXT0._000332.HITS.pool.root"
 	# extraTrfOptions["inputHighPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/Work/PixelCluster/SoshiZmumuFramework/samples/user.stsuno.mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1_EXT0/user.stsuno.7392273.EXT0._000241.HITS.pool.root"
 	
-	extraTrfOptions["inputHITSFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.410007.PowhegPythiaEvtGen_P2012_ttbar_hdamp172p5_allhad.simul.HITS.e4398_s2608/HITS.06476735._000007.pool.root.1"
-	extraTrfOptions["inputLowPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.simul.HITS.e3581_s2806/HITS.07591856._013487.pool.root.1"
-	extraTrfOptions["inputHighPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.simul.HITS.e3581_s2806/HITS.07591861._004380.pool.root.1"
+	# extraTrfOptions["inputHITSFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.410007.PowhegPythiaEvtGen_P2012_ttbar_hdamp172p5_allhad.simul.HITS.e4398_s2608/HITS.06476735._000007.pool.root.1"
+	# extraTrfOptions["inputLowPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.simul.HITS.e3581_s2806/HITS.07591856._013487.pool.root.1"
+	# extraTrfOptions["inputHighPtMinbiasHitsFile"] = "/afs/cern.ch/user/q/qzeng/eos/atlas/user/q/qzeng/Pixel/mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.simul.HITS.e3581_s2806/HITS.07591861._004380.pool.root.1"
+
+	extraTrfOptions["inputHITSFile"] = "/u/gl/zengq/nfs2/Atlas/dataset_tmp/Pixel/mc15_13TeV.410007.PowhegPythiaEvtGen_P2012_ttbar_hdamp172p5_allhad.simul.HITS.e4398_s2608/HITS.06476735._000007.pool.root.1"
+	extraTrfOptions["inputLowPtMinbiasHitsFile"] = "/u/gl/zengq/nfs2/Atlas/dataset_tmp/Pixel/mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.simul.HITS.e3581_s2806/HITS.07591856._013426.pool.root.1"
+	extraTrfOptions["inputHighPtMinbiasHitsFile"] = "/u/gl/zengq/nfs2/Atlas/dataset_tmp/Pixel/mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.simul.HITS.e3581_s2806/HITS.07591861._007384.pool.root.1"
 
 	extraTrfOptions["outputRDOFile"] = "MyRDO.pool.root"
 	# extraTrfOptions["outputESDFile"] = "MyESD.pool.root"
@@ -122,7 +126,7 @@ def runGrid(config, printOnly=False):
 		os.system(cmd)
 
 if __name__ == "__main__":
-	runLocal(config_blayerOFF_pixelOFF, False)
+	runLocal(config_blayerON_pixelON, False)
 
 	# runGrid(config_blayerON_pixelON, False)
 	# runGrid(config_blayerOFF_pixelON, False)
