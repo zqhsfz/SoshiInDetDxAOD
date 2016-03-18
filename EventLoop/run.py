@@ -3,31 +3,31 @@ from copy import deepcopy
 import time
 
 # local test #
-# cmd = "AH_run.py --files filelists/00-00-01/filelist_data_reference.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --nevents 2000 direct"
-# cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerOFF_pixelON_BichselON_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --nevents 2000 direct"
-# os.system(cmd)
+# cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_reference.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode athena --nevents 2000 direct"
+cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerOFF_pixelON_BichselON_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+os.system(cmd)
 
 # batch jobs #
 
-SUBMITFLAG='-q atlas-t3 -W 10:00'
+# SUBMITFLAG='-q atlas-t3 -W 10:00'
 # SUBMITFLAG='-W 0:30'
 
 # data
-DataConfigs = [
-               {'config': 'reference'},
-               {'config': 'IBLToT8_BLayDubOFF'},
-               {'config': 'IBLToT8_PixDubOFF'},
-              ]
+# DataConfigs = [
+#                {'config': 'reference'},
+#                {'config': 'IBLToT8_BLayDubOFF'},
+#                {'config': 'IBLToT8_PixDubOFF'},
+#               ]
 
-for configDict in DataConfigs:
-	configDict_copy = deepcopy(configDict)
-	configDict_copy["SUBMITFLAG"] = SUBMITFLAG
+# for configDict in DataConfigs:
+# 	configDict_copy = deepcopy(configDict)
+# 	configDict_copy["SUBMITFLAG"] = SUBMITFLAG
 
-	cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_{config}.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_data_{config}' --nevents 0 lsf --optSubmitFlags='{SUBMITFLAG}' --optFilesPerWorker=1".format(**configDict_copy)
-	print cmd
-	os.system(cmd)
+# 	cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_{config}.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_data_{config}' --nevents 0 lsf --optSubmitFlags='{SUBMITFLAG}' --optFilesPerWorker=1".format(**configDict_copy)
+# 	print cmd
+# 	os.system(cmd)
 
-	time.sleep(1)
+# 	time.sleep(1)
 
 # MC
 # MCConfigs = [

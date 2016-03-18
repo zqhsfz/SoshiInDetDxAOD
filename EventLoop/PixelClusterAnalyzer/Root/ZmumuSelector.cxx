@@ -405,7 +405,7 @@ EL::StatusCode ZmumuSelector :: execute ()
     auto v_tracks = Jet->getAssociatedObjects<xAOD::TrackParticle>("GhostTrack");
     for(auto track : v_tracks){
       if(!track){
-        if(m_debug) Warning("execute()", "Invalid link to InnerDetectorTrackParticle from Jet \"GhostTrack\" decoration!");
+        Warning("execute()", "Invalid link to InnerDetectorTrackParticle from Jet \"GhostTrack\" decoration! This track will be skipped");
         continue;
       }
 
@@ -788,7 +788,7 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
   int maxToT = -1;
   float maxCharge = -1.;
 
-  try{ // why some data files does not have this branch ?!
+  try{
     std::vector<int>   rdo_tot = PixelCluster->auxdata< std::vector<int> >("rdo_tot");
     std::vector<float> rdo_charge = PixelCluster->auxdata< std::vector<float> >("rdo_charge");
     std::vector<int>   rdo_eta_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_eta_pixel_index");
@@ -809,7 +809,7 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
     m_histsvc_pixelclusters->Set("SumEnergyLoss", sumCharge*3.62/1000.);
   }
   catch(...){
-    // return false;
+    Info("FillHistogramPixelCluster()", "Hmm, why you cannot get rdo information?!");
   }
 
   // G4 information (MC ONLY) --> not available for now

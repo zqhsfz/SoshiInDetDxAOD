@@ -9,4 +9,7 @@ EventLoop/.RootCoreBin
 EventLoop/xAODAnaHelpers/
 EventLoop/xAODBTaggingEfficiency/
 EventLoop/AutoHists
+EventLoop/xAODTracking
+EventLoop/EventLoop
+EventLoop/xAODRootAccess
 EventLoop/submitDir*

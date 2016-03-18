@@ -7,5 +7,17 @@
 #   : user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v1_Nominal.try2_EXT0
 # EventLoop: Z->mumu selection for analysis purpose. xAH version is HTopMultilep-00-01-06-17-g7d8d9fa (7d8d9fa1514ced97f42d1f783dce82f5e5dc91f7)
 ###########################
+# Version 00-00-01
+#
+# Data: Provided by Soshi, reconstructed in 20.7.3.8, /eos/atlas/user/s/stsuno/run2016/20.7.3.8/
+# MC: use complete HITS file. Digi / Recon / DAOD as specified in setup.sh / checkout.sh
+#   : Briefly speaking, we fix the b-layer HV to 250, along with many other pixel conditions change / variations
+# EventLoop : we official move to Base,2.4.3 However, we are using an old xAODTracking, as specified in the checkout.sh
+#           : xAH version should be StudyTrigTracks-00-02-01-20-g180aaa7 (180aaa767d4680d495f6a4215c8d979aa96fb7e7)
+#           : Although we are using exactly the same EventLoop code as 00-00-00, it looks like the link to rdo in data is no longer broken.
+#           : Also, the GhostTrack link is no longer broken
+#           : But, there is report that even though the link is valid, the data would give weird results. This is NOT investigated nor addressed in this release
+#           : We will investigate on this in next release
+#############################
 
 
