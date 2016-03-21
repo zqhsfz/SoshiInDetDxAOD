@@ -10,3 +10,6 @@ svn co svn+ssh://qzeng@svn.cern.ch/reps/atlasoff/Control/xAODRootAccess/tags/xAO
 
 # running scripts
 python xAODAnaHelpers/scripts/checkoutASGtags.py 2.3.41 # just a temporary hack. xAH does not support 2.4.3 yet. 2.3.41 in xAH is empty, which is what we want
+
+# for SLAC user:
+# commnet out the option setting on "sharedLSF" in xAODAnaHelpers/scripts/xAH_run.py

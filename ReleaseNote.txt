@@ -19,5 +19,14 @@
 #           : But, there is report that even though the link is valid, the data would give weird results. This is NOT investigated nor addressed in this release
 #           : We will investigate on this in next release
 #############################
+# Version 00-00-02
+#
+# Data: Same as 00-00-01
+# MC: Same as 00-00-01, except that we are using fast version of the Bichsel model, which contains some approximation. More details on this can be found in:
+#   : https://indico.cern.ch/event/509876/contribution/36/attachments/1246800/1836515/Updates.pdf
+# EventLoop: Same as 00-00-01, just change the sample name
+#          : We are using the same xAODAnaHelpers version as 00-00-01 (180aaa767d4680d495f6a4215c8d979aa96fb7e7)
+##############################
+
 
 

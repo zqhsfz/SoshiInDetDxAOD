@@ -4,7 +4,13 @@ import time
 
 # local test #
 # cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_reference.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode athena --nevents 2000 direct"
-cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerOFF_pixelON_BichselON_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerOFF_pixelON_BichselON_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# cmd = "xAH_run.py --files filelists/00-00-02/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# os.system(cmd)
+
+# batch for 00-00-02
+
+cmd = "xAH_run.py --files filelists/00-00-02/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_mc' --nevents 0 lsf --optSubmitFlags='-q atlas-t3 -W 2:00' --optFilesPerWorker=10"
 os.system(cmd)
 
 # batch jobs #
