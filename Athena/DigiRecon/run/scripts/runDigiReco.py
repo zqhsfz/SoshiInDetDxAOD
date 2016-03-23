@@ -60,7 +60,7 @@ def runLocal(config, printOnly=False):
 	for key,item in updateTrfOptions.items():
 		extraTrfOptions[key] = TrfOptions[key] + item
 
-	extraTrfOptions["maxEvents"] = "20" # "200"
+	extraTrfOptions["maxEvents"] = "200"
 	extraTrfOptions["jobNumber"] = "1"
 	
 	# extraTrfOptions["inputHITSFile"] = "/afs/cern.ch/user/q/qzeng/Work/PixelCluster/SoshiZmumuFramework/samples/user.qzeng.mc15_13TeV.361107.PowhegPythia8EvtGen_AZNLOCTEQ6L1_Zmumu.evgen.HITS.e3601_ATLAS-R2-2015-03-15-00.v1_EXT0/user.stsuno.7335511.EXT0._000518.HITS.pool.root"
@@ -127,9 +127,9 @@ def runGrid(config, printOnly=False):
 		os.system(cmd)
 
 if __name__ == "__main__":
-	# runLocal(config_blayerON_pixelON, False)
+	runLocal(config_blayerON_pixelON, True)
 
-	runGrid(config_blayerON_pixelON, False)
+	# runGrid(config_blayerON_pixelON, False)
 	# runGrid(config_blayerOFF_pixelON, False)
 	# runGrid(config_blayerOFF_pixelOFF, False)
 

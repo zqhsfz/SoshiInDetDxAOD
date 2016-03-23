@@ -1,0 +1,11 @@
+Index: src/ListRegistration.cc
+===================================================================
+--- src/ListRegistration.cc	(revision 731280)
++++ src/ListRegistration.cc	(working copy)
+@@ -97,3 +97,6 @@
+ static FADS::FactoryMadeList physlist_FTFP_BERT_noDiffraction("FTFP_BERT_noDiffraction");
+ static FADS::FactoryMadeList physlist_FTFP_BERT_newElastic("FTFP_BERT_newElastic");
+ 
++static FADS::FactoryMadeList physlist_LBE("LBE");
++static FADS::FactoryMadeList physlist_FTFP_BERT_LIV("FTFP_BERT_LIV");
++

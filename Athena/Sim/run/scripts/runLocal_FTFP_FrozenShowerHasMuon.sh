@@ -1,0 +1,13 @@
+Sim_tf.py \
+--conditionsTag 'default:OFLCOND-MC15c-SDR-02' \
+--geometryVersion 'default:ATLAS-R2-2015-03-15-00_VALIDATION' \
+--physicsList FTFP_BERT_LIV_VALIDATION \
+--truthStrategy 'MC12' \
+--simulator 'MC12G4' \
+--DataRunNumber '284500' \
+--DBRelease 'default:current' \
+--postInclude 'default:PyJobTransforms/UseFrontier.py' \
+--preInclude 'EVNTtoHITS:SimulationJobOptions/preInclude.BeamPipeKill.py,SimulationJobOptions/preInclude.FrozenShowers.py' \
+--maxEvents 10 \
+--inputEVNTFile /u/gl/zengq/nfs2/Atlas/dataset_tmp/mc15_13TeV.361107.PowhegPythia8EvtGen_AZNLOCTEQ6L1_Zmumu.evgen.EVNT.e3601/EVNT.04972716._013821.pool.root.1 \
+--outputHITSFile MyHITS.pool.root
