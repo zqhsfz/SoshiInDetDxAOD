@@ -1,0 +1,9 @@
+1) Prepare raw NN weights. Put this in NNWeights/
+2) Determine the PixelNNCalibFile corresponding to the condition tags you will use in your jobOption. Put that in PrepareCalibFiles/NNCalibFiles/
+3) Convert NN weights to histograms, using code in PrepareCalibFiles/NNClusteringCalibration_RunII/doCalibration.C
+4) Overwrite the calibration file in condition tags with your customized NN, through mergeCalibration.py in PrepareCalibFiles/ 
+5) Ship the final calibration file to GUID/, and insert GUID to it
+6) Ship the GUIDed calibration file to the Db/ directory under run/ in your reconstruction job
+7) Adjust the buildDb.sh under Db/ to make sure you are accessing the right Db. Also make sure you are setting the appropriate tag and folder. Then you can build your db file with that script
+8) move both calibration file and db in the running directory. Use "GridCatalogTrick.py" in "preInclude". Use "from IOVDbSvc.CondDB import conddb;etc." to do the operation you want
+9) For pathena job on grid, don't forget to --extFile GridCatalogTrick.py,Calibration.root,db.db

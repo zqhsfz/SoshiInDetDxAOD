@@ -1,0 +1,30 @@
+#### for this I usually set up the release I am going to use in my test 
+
+cp /cvmfs/atlas-condb.cern.ch/repo/conditions/poolcond/PoolFileCatalog.xml .
+
+coolHist_insertFileToCatalog.py NNcalibIBL.root
+
+export ATLAS_POOLCOND_PATH=/afs/cern.ch/work/s/silviam/prepare_DB_sqlite/Francesco_3 ---> not sure if this is necessary
+AtlCoolCopy.exe "COOLOFL_PIXEL/OFLP200" "sqlite://X;schema=newpixelNNdb.db;dbname=OFLP200" -f /PIXEL/PixelClustering/PixelClusNNCalib -nd -rdo -c
+
+ coolHist_setReference.py 'sqlite://X;schema=newpixelNNdb.db;dbname=OFLP200' /PIXEL/PixelClustering/PixelClusNNCalib 1 PixClusNNCalib-IBL3D25-00-00-00 NNcalibIBL.root
+
+==== >>> Skip this part if you don't want to commit to cool. 
+And, this is the command I used to put the sqlite file in cool:
+/afs/cern.ch/user/a/atlcond/utils/AtlCoolMerge.py newpixelNNdb.db OFLP200 ATLAS_COOLWRITE ATLAS_COOLOFL_PIXEL_W (password removed)
+<<< =====  back here!
+
+
+
+If you have your .db file to run locally to make tests just overwrite at run time with a jo like (this was for overwrite the folder PixMapOverlay with the local PixMapOverlay_IBL_PERFECT.db):
+
+if len(globalflags.ConditionsTag())!=0:
+   from IOVDbSvc.CondDB import conddb;
+   conddb.setGlobalTag(globalflags.ConditionsTag()); 
+   ## dead modules folder:
+   conddb.blockFolder("/PIXEL/PixMapOverlay")
+   conddb.addFolder("","<dbConnection>sqlite://;schema=PixMapOverlay_IBL_PERFECT.db;dbname=OFLP200</dbConnection> /PIXEL/PixMapOverlay <tag>PixMapOverlay-IBL-PERFECT</tag>", force=True);
+
+
+In my case I should use this folders:
+/PIXEL/PixelClustering/PixelClusNNCalib

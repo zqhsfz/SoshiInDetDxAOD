@@ -27,6 +27,17 @@
 # EventLoop: Same as 00-00-01, just change the sample name
 #          : We are using the same xAODAnaHelpers version as 00-00-01 (180aaa767d4680d495f6a4215c8d979aa96fb7e7)
 ##############################
-
+# Version 00-01-00
+# 
+# General: We implement the whole pipeline of converting NNWeights to usable calibration file, checking calibration file into db, and activating it in jobOption
+# A few caveate on the re-trained NN in this version:
+#   1) It was trained on the same Z->mumu sample that we are testing. So this is not good.
+#   2) The Z->mumu sample can provide enough stats for 1-particle training, but not enough stats for 2/3-particle training
+#   3) Only number of particles and centroid positions are trained. The error of centroid position has not been trained yet
+#   todo: Porivde a new input to CTIDE people, processed on JZ6W sample. It would provide enough stats and would be orthogonal to what we are testing
+# MC: Same configuration as before
+#   : "FastBichselOn" now defaults to "doBichsel=True,doEC=False,doBichselPU=True,nCols=5"
+# Data: reprocessed now with two versions: 1) nominal 2) re-trained NN
+################################
 
 
