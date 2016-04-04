@@ -3,58 +3,27 @@ from copy import deepcopy
 import time
 
 # local test #
-# cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_reference.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode athena --nevents 2000 direct"
-# cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerOFF_pixelON_BichselON_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
-# cmd = "xAH_run.py --files filelists/00-00-02/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# cmd = "xAH_run.py --files filelists/00-01-00/filelist_user.qzeng.data15_13TeV.00281411.physics_Main.merge.InDetDxAOD_ZMUMU.f629_m1453_r7562_v00-01-00_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# cmd = "xAH_run.py --files filelists/00-01-00/filelist_user.qzeng.data15_13TeV.00281411.physics_Main.merge.InDetDxAOD_ZMUMU.f629_m1453_r7562_v00-01-00_RetrainNN_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
+# cmd = "xAH_run.py --files filelists/00-01-00/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-01-00_blayerON_pixelON_FastBichselON_RetrainNN_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --mode class --nevents 2000 direct"
 # os.system(cmd)
 
-# batch for 00-00-02
+# batch for 00-01-00
 
-cmd = "xAH_run.py --files filelists/00-00-02/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_mc' --nevents 0 lsf --optSubmitFlags='-q atlas-t3 -W 2:00' --optFilesPerWorker=10"
-os.system(cmd)
+SUBMITFLAG='-q atlas-t3 -W 10:00'
 
-# batch jobs #
+Configs = [
+            {'filelist': 'filelist_user.qzeng.data15_13TeV.00281411.physics_Main.merge.InDetDxAOD_ZMUMU.f629_m1453_r7562_v00-01-00_EXT0.txt', 'shortname': 'data_reference', 'nFilesPerWorker': 20},
+            {'filelist': 'filelist_user.qzeng.data15_13TeV.00281411.physics_Main.merge.InDetDxAOD_ZMUMU.f629_m1453_r7562_v00-01-00_RetrainNN_EXT0.txt', 'shortname': 'data_RetrainNN', 'nFilesPerWorker': 20},
+            {'filelist': 'filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-01-00_blayerON_pixelON_FastBichselON_RetrainNN_EXT0.txt', 'shortname': 'mc_FastBichselOn_RetrainNN', 'nFilesPerWorker': 20},
+          ]
 
-# SUBMITFLAG='-q atlas-t3 -W 10:00'
-# SUBMITFLAG='-W 0:30'
+for config in Configs:
+	config_copy = deepcopy(config)
+	config_copy['SUBMITFLAG'] = SUBMITFLAG
+	cmd = "xAH_run.py --files filelists/00-01-00/{filelist} --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_{shortname}' --nevents 0 lsf --optSubmitFlags='{SUBMITFLAG}' --optFilesPerWorker={nFilesPerWorker}".format(**config_copy)
 
-# data
-# DataConfigs = [
-#                {'config': 'reference'},
-#                {'config': 'IBLToT8_BLayDubOFF'},
-#                {'config': 'IBLToT8_PixDubOFF'},
-#               ]
+	print cmd
+	time.sleep(1)
 
-# for configDict in DataConfigs:
-# 	configDict_copy = deepcopy(configDict)
-# 	configDict_copy["SUBMITFLAG"] = SUBMITFLAG
-
-# 	cmd = "xAH_run.py --files filelists/00-00-01/filelist_data_{config}.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_data_{config}' --nevents 0 lsf --optSubmitFlags='{SUBMITFLAG}' --optFilesPerWorker=1".format(**configDict_copy)
-# 	print cmd
-# 	os.system(cmd)
-
-# 	time.sleep(1)
-
-# MC
-# MCConfigs = [
-#               # {"blayer": "ON", "pixel": "ON", "bichsel": False, "nWorkers": 10},
-#               # {"blayer": "OFF", "pixel": "ON", "bichsel": False, "nWorkers": 10},
-#               # {"blayer": "OFF", "pixel": "OFF", "bichsel": False, "nWorkers": 10},
-
-#               # {"blayer": "ON", "pixel": "ON", "bichsel": True, "nWorkers": 20},
-#               # {"blayer": "OFF", "pixel": "ON", "bichsel": True, "nWorkers": 20},
-#               # {"blayer": "OFF", "pixel": "OFF", "bichsel": True, "nWorkers": 20},
-#             ]
-
-# for configDict in MCConfigs:
-# 	configDict_copy = deepcopy(configDict)
-
-# 	configDict_copy["BichselStr_filelist"] = ("BichselON" if configDict_copy["bichsel"] else "Nominal")
-# 	configDict_copy["BichselStr_submitdir"] = ("bichsel" if configDict_copy["bichsel"] else "nominal")
-# 	configDict_copy["SUBMITFLAG"] = SUBMITFLAG
-
-# 	cmd = "xAH_run.py --files filelists/00-00-01/filelist_user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayer{blayer}_pixel{pixel}_{BichselStr_filelist}_EXT0.txt --inputList --config PixelClusterAnalyzer/scripts/config.py -f --submitDir 'submitDir_mc_{BichselStr_submitdir}_blayer{blayer}_pixel{pixel}' --nevents 0 lsf --optSubmitFlags='{SUBMITFLAG}' --optFilesPerWorker={nWorkers}".format(**configDict_copy)
-# 	print cmd
-# 	os.system(cmd)
-
-# 	time.sleep(1)
+	os.system(cmd)

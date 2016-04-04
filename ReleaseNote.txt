@@ -38,6 +38,8 @@
 # MC: Same configuration as before
 #   : "FastBichselOn" now defaults to "doBichsel=True,doEC=False,doBichselPU=True,nCols=5"
 # Data: reprocessed now with two versions: 1) nominal 2) re-trained NN
+# EventLoop:
+#   : Nothing change. One should still use xAH revision StudyTrigTracks-00-02-01-20-g180aaa7 (180aaa767d4680d495f6a4215c8d979aa96fb7e7)
 ################################
 
 
