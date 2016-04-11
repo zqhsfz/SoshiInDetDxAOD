@@ -41,5 +41,8 @@
 # EventLoop:
 #   : Nothing change. One should still use xAH revision StudyTrigTracks-00-02-01-20-g180aaa7 (180aaa767d4680d495f6a4215c8d979aa96fb7e7)
 ################################
-
+# Version 00-01-11:
+#
+# General: This is mainly to change the sigmoid function in TTrainedNetwork.cxx in order to be compatible with the NN weights provided by L-G (it is the same weight as 00-01-00, so this is more like a bug-fix). However, this change is by no means a permanent one. In next version, L-G will provide NN weights trained on default sigmoid function, and such hack becomes no longer necessary. The main change is in DigiRecon, NNTrained; Also edit DAOD/ a bit, but only in order to create IDTIDE derivation. It is worth mentioning that, such bug fix does not solve the resolution smearing we are seeing
+################################
 
