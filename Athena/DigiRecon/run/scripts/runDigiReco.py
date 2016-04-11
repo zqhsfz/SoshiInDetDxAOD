@@ -21,7 +21,7 @@ extraTrfOptions_kernel = {
 # Control over NN contents #
 ############################
 
-_doNN = True # False  # touch
+_doNN = False  # touch
 _NNAppendix = []
 if _doNN:
 	_NNAppendix = [
@@ -32,7 +32,7 @@ if _doNN:
 ##############################
 # Control over re-trained NN #
 ##############################
-_useRetrainNN = False    # touch
+_useRetrainNN = True    # touch
 _RetrainNNAppendix = ''
 _GridCatalogTrick = ''
 if _useRetrainNN:
@@ -143,7 +143,7 @@ def runGrid(config, printOnly=False):
 	                  "inDS": "user.qzeng:user.qzeng.mc15_13TeV.361107.PowhegPythia8EvtGen_AZNLOCTEQ6L1_Zmumu.evgen.HITS.e3601_ATLAS-R2-2015-03-15-00.v1_EXT0",
 	                  "lowMinDS": "user.qzeng.mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1.try1_EXT0",
 	                  "highMinDS": "user.stsuno.mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1_EXT0",
-	                  "outDS": "user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.e3601_ATLAS-R2-2015-03-15-00.v00-01-00_%s_FastBichselON_RetrainNN" % (configName),
+	                  "outDS": "user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.e3601_ATLAS-R2-2015-03-15-00.v00-01-01_%s_FastBichselON_RetrainNN" % (configName),
 	                  # "outDS": "user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.v00-00-02_%s_FastBichselON_ECOffPUOn_nCols5" % (configName),    # the name above is too long ...
 
 	                  # touch
@@ -161,8 +161,8 @@ def runGrid(config, printOnly=False):
 		os.system(cmd)
 
 if __name__ == "__main__":
-	# runLocal(config_blayerON_pixelON, True)
-	runGrid(config_blayerON_pixelON, True)
+	# runLocal(config_blayerON_pixelON, False)
+	runGrid(config_blayerON_pixelON, False)
 
 
 	# runGrid(config_blayerOFF_pixelON, False)
