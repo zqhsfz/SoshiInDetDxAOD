@@ -124,6 +124,7 @@ ZmumuSelector :: ZmumuSelector ()
   m_inJetContainerName = "";
   m_inTrackContainerName = "";
 
+  m_outTrackContainerName_PVTrack = "";
   m_outTrackContainerName_Zmumu = "";
   m_outTrackContainerName_Jet = "";
   m_outTrackContainerName_Other = "";
@@ -362,6 +363,24 @@ EL::StatusCode ZmumuSelector :: execute ()
   const xAOD::TrackParticleContainer* inTracks(nullptr);
   RETURN_CHECK("ZmumuSelector::execute()", HelperFunctions::retrieve(inTracks, m_inTrackContainerName, m_event, m_store, m_debug) ,"");
 
+  // PV-track
+  if(m_debug) Info("execute()", "Storing PV-tracks");
+
+  ConstDataVector<xAOD::TrackParticleContainer>* outTracks_PV(nullptr);
+  outTracks_PV = new ConstDataVector<xAOD::TrackParticleContainer>(SG::VIEW_ELEMENTS);
+
+  for(auto Track : *inTracks){
+    // must from PV
+    if(Track->vertex() != m_PrimaryVertex) continue;
+
+    // track selection
+    if(!TrackSelection(Track)) continue;
+
+    outTracks_PV->push_back(Track);
+  }
+
+  RETURN_CHECK("ZmumuSelector::execute()", m_store->record(outTracks_PV, m_outTrackContainerName_PVTrack), "Failed to store tracks from PV");
+
   // muon-tracks
   if(m_debug) Info("execute()", "Storing muon-tracks");
 
@@ -466,6 +485,7 @@ EL::StatusCode ZmumuSelector :: execute ()
 
   // track histograms
   if(m_debug) Info("execute()", "Filling track histograms");
+  RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_PVTrack), "Failure when filling track histograms");
   RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Zmumu), "Failure when filling track histograms");
   RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Jet), "Failure when filling track histograms");
   RETURN_CHECK("ZmumuSelector::execute()", FillHistogramTracks(m_outTrackContainerName_Other), "Failure when filling track histograms");

@@ -36,6 +36,7 @@ public:
   std::string m_inJetContainerName;
   std::string m_inTrackContainerName;
 
+  std::string m_outTrackContainerName_PVTrack;
   std::string m_outTrackContainerName_Zmumu;
   std::string m_outTrackContainerName_Jet;
   std::string m_outTrackContainerName_Other; 

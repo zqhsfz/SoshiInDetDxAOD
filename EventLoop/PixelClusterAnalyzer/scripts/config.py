@@ -84,6 +84,7 @@ c.setalg("ZmumuSelector", {
 	                        "m_inJetContainerName"           : "AntiKt4EMTopoJets_Calib_Selected",
 	                        "m_inTrackContainerName"         : "InDetTrackParticles",
 
+	                        "m_outTrackContainerName_PVTrack": "Tracks_PV",
 	                        "m_outTrackContainerName_Zmumu"  : "Tracks_Zmumu",
 	                        "m_outTrackContainerName_Jet"    : "Tracks_Jet",
 	                        "m_outTrackContainerName_Other"  : "Tracks_Other",
