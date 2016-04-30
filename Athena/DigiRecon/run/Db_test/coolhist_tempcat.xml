@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<POOLFILECATALOG>
+
+    <File ID="D4AFE671-8881-5B46-9E1E-5A42D28A1AE3">
+    <physical>
+    <pfn filetype="ROOT_All" name="DefaultNNCalibrationFile.root"/>
+    </physical>
+    </File>
+</POOLFILECATALOG>

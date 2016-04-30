@@ -32,7 +32,7 @@ if _doNN:
 ##############################
 # Control over re-trained NN #
 ##############################
-_useRetrainNN = True    # touch
+_useRetrainNN = False    # touch
 _RetrainNNAppendix = ''
 _GridCatalogTrick = ''
 if _useRetrainNN:
@@ -87,7 +87,7 @@ def runLocal(config, printOnly=False):
 	for key,item in updateTrfOptions.items():
 		extraTrfOptions[key] = TrfOptions[key] + item
 
-	extraTrfOptions["maxEvents"] = "10"
+	extraTrfOptions["maxEvents"] = "50"
 	extraTrfOptions["jobNumber"] = "1"
 	
 	extraTrfOptions["inputHITSFile"] = "/afs/cern.ch/user/q/qzeng/Work/PixelCluster/SoshiZmumuFramework/samples/user.qzeng.mc15_13TeV.361107.PowhegPythia8EvtGen_AZNLOCTEQ6L1_Zmumu.evgen.HITS.e3601_ATLAS-R2-2015-03-15-00.v1_EXT0/user.stsuno.7335511.EXT0._000518.HITS.pool.root"
@@ -103,7 +103,7 @@ def runLocal(config, printOnly=False):
 	# extraTrfOptions["inputHighPtMinbiasHitsFile"] = "/u/gl/zengq/nfs2/Atlas/dataset_tmp/Pixel/mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.simul.HITS.e3581_s2806/HITS.07591861._007384.pool.root.1"
 
 	extraTrfOptions["outputRDOFile"] = "MyRDO.pool.root"
-	extraTrfOptions["outputESDFile"] = "MyESD.pool.root"
+	# extraTrfOptions["outputESDFile"] = "MyESD.pool.root"
 
 	# extraTrfOptions["athenaopts"] = "-l VERBOSE"
 
@@ -161,8 +161,8 @@ def runGrid(config, printOnly=False):
 		os.system(cmd)
 
 if __name__ == "__main__":
-	# runLocal(config_blayerON_pixelON, False)
-	runGrid(config_blayerON_pixelON, False)
+	runLocal(config_blayerON_pixelON, False)
+	# runGrid(config_blayerON_pixelON, False)
 
 
 	# runGrid(config_blayerOFF_pixelON, False)
