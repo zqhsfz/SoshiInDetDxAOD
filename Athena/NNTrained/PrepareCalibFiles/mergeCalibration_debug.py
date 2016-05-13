@@ -101,12 +101,16 @@ def mergeCalibration(pathOLD, pathBICHSEL, outputNAME):
 	print "Merging files to %s ..." % (outputNAME)
 
 	for keyName in dirList:
+		print "Processing dir:",keyName,"..."
+
 		f_new.cd()
 
 		if keyName in dirList_bichsel:
+			print "\tTake content from bichsel file"
 			source = f_bichsel.Get(keyName)
 			CopyDir(source)
-		else:
+		else:	
+			print "\tTake content from old file"
 			source = f_old.Get(keyName)
 			CopyDir(source)
 
@@ -114,5 +118,5 @@ def mergeCalibration(pathOLD, pathBICHSEL, outputNAME):
 
 if __name__ == "__main__":
 	# There are two IOVs in this tag, one for run 1 and one for run 2. We only overwrite the run 2 one
-	mergeCalibration("NNCalibFiles/OFLCOND-MC15c-SDR-05/cond09_mc.000087.gen.COND._0004.pool.root", "NNClusteringCalibration_RunII/NNCalibBichsel.root", "DefaultNNCalibrationFile.root")
+	mergeCalibration("NNCalibFiles/OFLCOND-MC15c-SDR-05/cond09_mc.000087.gen.COND._0004.pool.root", "NNClusteringCalibration_RunII/NNCalibBichsel_NNTrained_20160501_JZ.root", "DefaultNNCalibrationFile.root")
 

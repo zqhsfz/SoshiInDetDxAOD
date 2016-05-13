@@ -1,0 +1,11 @@
+pathena \
+--useNewTRF \
+--trf "Reco_tf.py --autoConfiguration='everything' --maxEvents '500' --skipEvents %SKIPEVENTS --inputHITSFile=%IN --outputESDFile=%OUT.ESD.pool.root --preInclude 'RAWtoESD:preInclude.IDonly_reconstruction.py' --postInclude 'HITtoRDO:mcHitInfo.py' 'RAWtoESD:_TIDExAODAnalysis.py'" \
+--nFiles=500 \
+--nEventsPerJob=500 \
+--extOutFile AOD.TIDE.pool.root \
+--skipScout \
+--official \
+--voms=atlas:/atlas/det-indet/Role=production \
+--inDS  mc15_13TeV:mc15_13TeV.361026.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ6W.merge.HITS.e3569_s2608_s2183  \
+--outDS group.det-indet.361026.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ6W.AOD_TIDE.Nominal.e3569_s2608_s2183.ontrack.v00-01-03.try2

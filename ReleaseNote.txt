@@ -43,8 +43,19 @@
 #
 # SideNote: Samples produced under this tag, but with "NoPU_NN" appendix, is actually following 00-00-02. Those samples are the input for NN re-training, and they are always using the default NN during reconstruction step. To assure you of this, you can check the bigpanda job, and you will find that these job does not have --extfile options, while other normal  digi+recon job has (since those are needed to run customized NN)
 ################################
-# Version 00-01-11:
+# Version 00-01-01:
 #
 # General: This is mainly to change the sigmoid function in TTrainedNetwork.cxx in order to be compatible with the NN weights provided by L-G (it is the same weight as 00-01-00, so this is more like a bug-fix). However, this change is by no means a permanent one. In next version, L-G will provide NN weights trained on default sigmoid function, and such hack becomes no longer necessary. The main change is in DigiRecon, NNTrained; Also edit DAOD/ a bit, but only in order to create IDTIDE derivation. It is worth mentioning that, such bug fix does not solve the resolution smearing we are seeing
 ################################
-
+# Version 00-01-02:
+#
+# Same as 00-01-01, except we use a new NN weights with many bugs fixed. It turns out there are two problems on my side:
+# 1) When preparing DAOD, I should also re-write Db (for pixel conditions etc.). The main known impact is on ToT. ToT is NOT stored in ESD.
+#    As a result, it will be re-calcualted from charge
+# 2) The TIDE derivation you provided earlier has some serious bias on truth residuals. A new sub-package has been created to use the receipe given by L-G.
+#    Validation with NN weights trained on this new TIDE will be in next release
+#
+#  EventLoop: 
+#     1) Bug on calcualting MaxChargeProp has been fixed
+#     2) TracksPV collection has been added
+################################

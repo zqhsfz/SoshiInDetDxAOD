@@ -9,28 +9,34 @@
 
 using namespace std;
 
-void prepareClusteringCalibrationFile(TString outputFileName="NNCalibBichsel.root")
+void prepareClusteringCalibrationFile(TString outputFileName="NNCalibBichsel_NNTrained_20160501_JZ.root")
 {
-  TString NNWeightsDir = "../../NNWeights/NNTrained_20160329_Zmumu/";
+  TString NNWeightsDir = "../../NNWeights/NNTrained_20160501_JZ/";
   
   vector<TString> nameFiles;
   vector<TString> nameCalibrationDirectory;
 
-  nameFiles.push_back(NNWeightsDir+"/TTrainedNetwork_bichsel_number.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrainedNetwork_bichsel_pos1.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrainedNetwork_bichsel_pos2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrainedNetwork_bichsel_pos3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_number.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos1.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos2.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos3.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error1x.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error2x.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error3x.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error1y.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error2y.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error3y.v2.root");
   
   nameCalibrationDirectory.push_back("NumberParticles");
   nameCalibrationDirectory.push_back("ImpactPoints1P");
   nameCalibrationDirectory.push_back("ImpactPoints2P");
   nameCalibrationDirectory.push_back("ImpactPoints3P");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsX1");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsX2");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsX3");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsY1");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsY2");
-  // nameCalibrationDirectory.push_back("ImpactPointErrorsY3");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsX1");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsX2");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsX3");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsY1");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsY2");
+  nameCalibrationDirectory.push_back("ImpactPointErrorsY3");
 
   TFile* outputFile=new TFile(outputFileName,"recreate");
 

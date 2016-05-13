@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <POOLFILECATALOG>
 
-    <File ID="D4AFE671-8881-5B46-9E1E-5A42D28A1AE3">
+    <File ID="7C18BE02-F094-C84C-9DCB-ADF412E35FAB">
     <physical>
-    <pfn filetype="ROOT_All" name="DefaultNNCalibrationFile.root"/>
+    <pfn filetype="ROOT_All" name="NNCalibFinal_NNTrained_20160501_JZ.root"/>
     </physical>
     </File>
 </POOLFILECATALOG>
