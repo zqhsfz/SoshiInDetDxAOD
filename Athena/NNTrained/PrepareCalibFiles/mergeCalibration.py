@@ -117,5 +117,5 @@ def mergeCalibration(pathOLD, pathBICHSEL, outputNAME):
 
 if __name__ == "__main__":
 	# There are two IOVs in this tag, one for run 1 and one for run 2. We only overwrite the run 2 one
-	mergeCalibration("NNCalibFiles/OFLCOND-MC15c-SDR-05/cond09_mc.000087.gen.COND._0004.pool.root", "NNClusteringCalibration_RunII/NNCalibBichsel_NNTrained_20160501_JZ.root", "NNCalibFinal_NNTrained_20160501_JZ.root")
+	mergeCalibration("NNCalibFiles/OFLCOND-MC15c-SDR-05/cond09_mc.000087.gen.COND._0004.pool.root", "NNClusteringCalibration_RunII/NNCalibBichsel_NNTrained_20160513_LGTide_JZ6W.root", "NNCalibFinal_NNTrained_20160513_LGTide_JZ6W.root")
 

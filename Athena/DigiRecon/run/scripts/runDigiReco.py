@@ -34,7 +34,7 @@ if _doNN:
 ##############################
 # Control over re-trained NN #
 ##############################
-_useRetrainNN = True    # touch
+_useRetrainNN = False    # touch
 _RetrainNNAppendix = ''
 _GridCatalogTrick = ''
 if _useRetrainNN:
@@ -62,8 +62,7 @@ def config_v00_00_00():
 def config_blayerON_pixelON():
 	updateConfig = {
 	  "postExec": ['HITtoRDO:from AthenaCommon.AppMgr import ToolSvc;ToolSvc.PixelDigitizationTool.LVL1Latency=[16,150,255,255,255,16];ToolSvc.PixelDigitizationTool.ApplyDupli=[True,True,True,True,True,True];ToolSvc.PixelDigitizationTool.LowTOTduplication=[0,5,7,7,7,0]'] + _NNAppendix,
-	  # "preExec": ['all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.OutputLevel=VERBOSE; print SiLorentzAngleSvc;from IOVDbSvc.CondDB import conddb;conddb.addOverride("/PIXEL/DCS/HV","PixDCSHV-SIMU-RUN2-BL250");conddb.addOverride("/PIXEL/DCS/TEMPERATURE","PixDCSTEMP-SIMU-RUN12-0000-00");conddb.addOverride("/PIXEL/PixCalib","PixCalib-SIM-RUN12-000-04")'+_RetrainNNAppendix],
-	  "preExec": ['all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.OutputLevel=VERBOSE; print SiLorentzAngleSvc;from IOVDbSvc.CondDB import conddb;conddb.addOverride("/PIXEL/DCS/HV","PixDCSHV-SIMU-RUN2-BL250");conddb.addOverride("/PIXEL/DCS/TEMPERATURE","PixDCSTEMP-SIMU-RUN12-0000-00")'+_RetrainNNAppendix],   # remove the Db overwrite on pixel calibration touch
+	  "preExec": ['all:from SiLorentzAngleSvc.SiLorentzAngleSvcConf import SiLorentzAngleSvc;SiLorentzAngleSvc.OutputLevel=VERBOSE; print SiLorentzAngleSvc;from IOVDbSvc.CondDB import conddb;conddb.addOverride("/PIXEL/DCS/HV","PixDCSHV-SIMU-RUN2-BL250");conddb.addOverride("/PIXEL/DCS/TEMPERATURE","PixDCSTEMP-SIMU-RUN12-0000-00");conddb.addOverride("/PIXEL/PixCalib","PixCalib-SIM-RUN12-000-04")'+_RetrainNNAppendix],
 	}
 	return updateConfig
 
@@ -147,16 +146,11 @@ def runGrid(config, printOnly=False):
 	                  "lowMinDS": "user.qzeng.mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1.try1_EXT0",
 	                  "highMinDS": "user.stsuno.mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.evgen.EVNT.e3581_ATLAS-R2-2015-03-15-00.v1_EXT0",
 	                  # "outDS": "group.det-indet.mc15_13TeV.361107.Zmumu.DigiRecon.e3601_ATLAS-R2-2015-03-15-00.v00-01-02_%s_FastBichselON_RetrainNN_NoPixelCalibDbOW" % (configName),
-	                  "outDS": "group.det-indet.mc15_13TeV.361107.Zmumu.DigiRecon.e3601.v00-01-02_%s_FastBichselON_RetrainNN_NoPixelCalibDbOW" % (configName),   # name above is too long
-
-	                  # touch
-	                  # "nFiles": 20,
-	                  # "outDS": "user.qzeng.mc15_13TeV.361107.DigiRecon.NNRetrainTest.Try2",
+	                  "outDS": "group.det-indet.mc15_13TeV.361107.Zmumu.DigiRecon.e3601.v00-01-03_%s_FastBichselON_DefaultNN" % (configName),   # name above is too long    # touch
 	                 }
 
 	if _useRetrainNN:
-		pathenaOptions["extFile"] = "GridCatalogTrick.py,NewPixelNNdb.db,NNCalibFinal_NNTrained_20160501_JZ.root"
-		# pathenaOptions["extFile"] = "GridCatalogTrick.py,NewPixelNNdb.db,DefaultNNCalibrationFile.root"   # touch
+		pathenaOptions["extFile"] = "GridCatalogTrick.py,NewPixelNNdb.db,NNCalibFinal_NNTrained_20160513_LGTide_JZ6W.root"
 
 	if _useOfficialVOMS:
 		pathenaOptions["official"] = None

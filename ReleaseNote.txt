@@ -59,3 +59,7 @@
 #     1) Bug on calcualting MaxChargeProp has been fixed
 #     2) TracksPV collection has been added
 ################################
+# Version 00-01-03:
+# 
+# First converging NN re-training done. There are still some bias issues, but we can get a relief on first order.
+###############################

@@ -32953,6 +32953,30 @@
       <lfn name="cond09_mc.000115.gen.COND._0001.pool.root"/>
   </logical>
 </File>
+  <File ID="50B7B8EB-1EF8-4119-B2F6-F6D32B844830">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/cond09/cond09_mc.000116.gen.COND/cond09_mc.000116.gen.COND._0001.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="cond09_mc.000116.gen.COND._0001.pool.root"/>
+  </logical>
+</File>
+  <File ID="69CF770A-CAC2-7045-8696-93D50BCA3D5D">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/cond09/cond09_mc.000116.gen.COND/cond09_mc.000116.gen.COND._0003.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="cond09_mc.000116.gen.COND._0003.pool.root"/>
+  </logical>
+</File>
+  <File ID="67BD7FF3-73E1-9C49-B5F6-A334100BE9F3">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/cond09/cond09_mc.000116.gen.COND/cond09_mc.000116.gen.COND._0002.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="cond09_mc.000116.gen.COND._0002.pool.root"/>
+  </logical>
+</File>
   <File ID="D8910253-4916-DF11-B437-000423D9A296">
     <physical>
       <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/cond10/cond10_data.000001.gen.COND/cond10_data.000001.gen.COND._0003.pool.root"/>
@@ -61993,6 +62017,94 @@
       <lfn name="cond12_data.000039.gen.COND._0001.pool.root"/>
   </logical>
 </File>
+  <File ID="D6945429-8E2F-F14D-945A-C8217D58556A">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/cond12/cond12_data.000040.gen.COND/cond12_data.000040.gen.COND._0001.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="cond12_data.000040.gen.COND._0001.pool.root"/>
+  </logical>
+</File>
+  <File ID="A77A7A76-20AD-EA4A-B84B-6920A0A95575">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0005.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0005.pool.root"/>
+  </logical>
+</File>
+  <File ID="91FC4EAB-C029-2242-97C1-BB67D7F45CF8">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0007.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0007.pool.root"/>
+  </logical>
+</File>
+  <File ID="9ADF7F4A-E318-E611-97FB-02163E008D58">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0010.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0010.pool.root"/>
+  </logical>
+</File>
+  <File ID="51089C49-4AEC-4AB5-9699-A09DDE5B5D64">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0001.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0001.pool.root"/>
+  </logical>
+</File>
+  <File ID="C1B5465E-4469-7D45-A44E-62D65842F658">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0006.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0006.pool.root"/>
+  </logical>
+</File>
+  <File ID="31CA32BE-6CC1-3C40-99A7-7A1129ADDF78">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0003.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0003.pool.root"/>
+  </logical>
+</File>
+  <File ID="C54F7C80-9A78-034A-97DE-4F7C887BC0C1">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0009.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0009.pool.root"/>
+  </logical>
+</File>
+  <File ID="A071EFE9-91D8-6244-9020-38D9B01D3613">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0004.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0004.pool.root"/>
+  </logical>
+</File>
+  <File ID="2EAF3572-5BAD-5441-88E7-A9BB65AB35BC">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0002.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0002.pool.root"/>
+  </logical>
+</File>
+  <File ID="0C8A760E-8BE4-FD42-A0E8-5C15D0D79905">
+    <physical>
+      <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000037.gen.COND/condR2_data.000037.gen.COND._0008.pool.root"/>
+  </physical>
+    <logical>
+      <lfn name="condR2_data.000037.gen.COND._0008.pool.root"/>
+  </logical>
+</File>
   <File ID="B6427C61-1EE8-2A45-AED1-163959DEB721">
     <physical>
       <pfn filetype="ROOT_All" name="/cvmfs/atlas-condb.cern.ch/repo/conditions/condR2/condR2_data.000001.lar.COND/condR2_data.000001.lar.COND._0001.pool.root"/>
@@ -71193,9 +71305,9 @@
       <lfn name="oflcond.000003.conditions.simul.pool.v0000._0010.pool.root"/>
   </logical>
 </File>
-  <File ID="7C18BE02-F094-C84C-9DCB-ADF412E35FAB">
+  <File ID="A1766400-6D0C-1440-BB7B-82C704429A76">
     <physical>
-      <pfn filetype="ROOT_All" name="NNCalibFinal_NNTrained_20160501_JZ.root"/>
+      <pfn filetype="ROOT_All" name="NNCalibFinal_NNTrained_20160513_LGTide_JZ6W.root"/>
     </physical>
     <logical/>
   </File>

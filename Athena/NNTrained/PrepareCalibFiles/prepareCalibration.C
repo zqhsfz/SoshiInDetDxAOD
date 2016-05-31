@@ -9,23 +9,23 @@
 
 using namespace std;
 
-void prepareClusteringCalibrationFile(TString outputFileName="NNCalibBichsel_NNTrained_20160501_JZ.root")
+void prepareClusteringCalibrationFile(TString outputFileName="NNCalibBichsel_NNTrained_20160513_LGTide_JZ6W.root")
 {
-  TString NNWeightsDir = "../../NNWeights/NNTrained_20160501_JZ/";
+  TString NNWeightsDir = "../../NNWeights/NNTrained_20160513_LGTide_JZ6W/";
   
   vector<TString> nameFiles;
   vector<TString> nameCalibrationDirectory;
 
-  nameFiles.push_back(NNWeightsDir+"/TTrained_number.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_pos1.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_pos2.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_pos3.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error1x.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error2x.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error3x.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error1y.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error2y.v2.root");
-  nameFiles.push_back(NNWeightsDir+"/TTrained_error3y.v2.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_number.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos1.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos2.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_pos3.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error1x.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error2x.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error3x.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error1y.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error2y.v3.root");
+  nameFiles.push_back(NNWeightsDir+"/TTrained_error3y.v3.root");
   
   nameCalibrationDirectory.push_back("NumberParticles");
   nameCalibrationDirectory.push_back("ImpactPoints1P");

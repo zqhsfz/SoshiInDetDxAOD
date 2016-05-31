@@ -7,7 +7,7 @@ pathena \
 --maxEvents '100'" \
 --nFilesPerJob=1 \
 --skipScout \
---inDS=group.det-indet.mc15_13TeV.361107.Zmumu.DigiRecon.e3601.v00-01-02_blayerON_pixelON_FastBichselON_DefaultNNSelfImport_EXT0/ \
---outDS=group.det-indet.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601.v00-01-02_blayerON_pixelON_FastBichselON_DefaultNNSelfImport \
+--inDS=group.det-indet.mc15_13TeV.361107.Zmumu.DigiRecon.e3601.v00-01-03_blayerON_pixelON_FastBichselON_RetrainNN_EXT0/ \
+--outDS=group.det-indet.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601.v00-01-03_blayerON_pixelON_FastBichselON_RetrainNN \
 --official \
 --voms=atlas:/atlas/det-indet/Role=production
