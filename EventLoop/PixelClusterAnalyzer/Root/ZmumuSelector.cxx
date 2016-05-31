@@ -808,29 +808,38 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
   int maxToT = -1;
   float maxCharge = -1.;
 
-  try{
+  // try{
     std::vector<int>   rdo_tot = PixelCluster->auxdata< std::vector<int> >("rdo_tot");
     std::vector<float> rdo_charge = PixelCluster->auxdata< std::vector<float> >("rdo_charge");
     std::vector<int>   rdo_eta_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_eta_pixel_index");
     std::vector<int>   rdo_phi_pixel_index = PixelCluster->auxdata< std::vector<int> >("rdo_phi_pixel_index");
 
-    float sumCharge = 0.;
+    float sumToT = 0.;
     for(unsigned int irdo = 0; irdo < rdo_tot.size(); irdo++){
       if(rdo_tot[irdo] > maxToT) maxToT = rdo_tot[irdo];
-      if(rdo_charge[irdo] > maxCharge) maxCharge = rdo_charge[irdo];
+      sumToT += rdo_tot[irdo];
+    }
 
+    float sumCharge = 0.;
+    for(unsigned int irdo = 0; irdo < rdo_charge.size(); irdo++){
+      // don't ask me, I don't know why some (exterme rare case) pixel could have negative charge ... 
+      // This would eliminte the >1 overflow
+      if(rdo_charge[irdo] < 0.) continue;
+
+      if(rdo_charge[irdo] > maxCharge) maxCharge = rdo_charge[irdo];
       sumCharge += rdo_charge[irdo];
     }
 
-    m_histsvc_pixelclusters->Set("MaxChargeProp", 1.0*maxCharge/m_histsvc_pixelclusters->Get("Charge"));
-    m_histsvc_pixelclusters->Set("MaxToTProp", 1.0*maxToT/m_histsvc_pixelclusters->Get("ToT"));
+    // It is important that the denominator is the sum of charge here, since cluster charge is converted from cluster ToT, which is the sum of pixel ToT, instead of the sum of charge on each pixel, which is converted from pixel ToT. These two things (sum of charge, or cluster charge) can potentially be different, since the charge<->tot calibration is non-linear
+    m_histsvc_pixelclusters->Set("MaxChargeProp", 1.0*maxCharge/sumCharge);
+    m_histsvc_pixelclusters->Set("MaxToTProp", 1.0*maxToT/sumToT);
 
     m_histsvc_pixelclusters->Set("SumCharge", sumCharge);
     m_histsvc_pixelclusters->Set("SumEnergyLoss", sumCharge*3.62/1000.);
-  }
-  catch(...){
-    Info("FillHistogramPixelCluster()", "Hmm, why you cannot get rdo information?!");
-  }
+  // }
+  // catch(...){
+  //   Info("FillHistogramPixelCluster()", "Hmm, why you cannot get rdo information?!");
+  // }
 
   // G4 information (MC ONLY) --> not available for now
   // if(isMC){
@@ -901,6 +910,8 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
 
   // pt
   TString PtTag = "_Pt";
+  if( (m_histsvc_pixelclusters->Get("trkPt") >= 0.5) && (m_histsvc_pixelclusters->Get("trkPt") < 1.) )
+    PtTag += "-1";
   if( (m_histsvc_pixelclusters->Get("trkPt") >= 1.) && (m_histsvc_pixelclusters->Get("trkPt") < 5.) )
     PtTag += "0";
   else if( (m_histsvc_pixelclusters->Get("trkPt") >= 5.) && (m_histsvc_pixelclusters->Get("trkPt") < 10.) )
@@ -945,7 +956,8 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
 bool ZmumuSelector :: TrackSelection(const xAOD::TrackParticle* Track)
 {
   // kinematic cuts
-  if(Track->pt() < 1e3) return false;
+  // if(Track->pt() < 1e3) return false;
+  if(Track->pt() < 500.) return false;
   if(abs(Track->eta()) > 2.5) return false;
 
   // quality cut
