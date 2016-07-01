@@ -1,0 +1,3 @@
+The purpose of this (temporary) pkg is to do NN validation test, with a certain fixed Athena release and minimal local changes, in order to have a good control over the software/conditions/etc.
+
+For now, the NN that we re-trained over is some 20.7.X.Y trunk, but likely to be at least 20.7.5.8. Therefore, although we have re-submitted a NN re-training job with that specific athena release, we will just do all the digi+recon jobs wiht this athena release anyway, and do "autoconfiguration" with mc15c conditionTags

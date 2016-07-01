@@ -56,7 +56,7 @@ def GetCmd(Options, extraOptions, doNewLine=False):
 
 	# now generate command
 	cmd = "Reco_tf.py "
-	if doNewLine: cmd += "\n"
+	if doNewLine: cmd += " \\\n"
 
 	for key,value in Options_in.items():
 		contentList = []
@@ -99,17 +99,27 @@ def GetCmd(Options, extraOptions, doNewLine=False):
 			if "%" in content:   # only appears in pathena case
 				cmd += ("%s " % (content))
 			else:
+				if "\\\'" in content:
+					# bash does not allow single quote inside single quote, so there are a few solution out:
+					# 1. surround \' with single quotes: '\''
+					# 2. replace single quote with ascii code: single quote is \x27 and double quote is \x22
+					# content = content.replace("\\\'", "\'\\\'\'")       # solution 1
+					content = content.replace("\\\'", "\\x27")          # solution 2  --> preferred, since it does not introduce further quotes to be escaped when submitting pathena job ... 
+
 				cmd += ("\'%s\' " % (content))
 
 		if doNewLine:
-			cmd += ("\n")
+			cmd += (" \\\n")
 
 	return cmd
 
 # generate pathena command 
 def GetPathenaCmd(PathenaOptions, TrfOptions, TrfExtraOptions, doNewLine=False):
 	trfCmd = GetCmd(TrfOptions, TrfExtraOptions, False)
+	
+	trfCmd = trfCmd.replace("\\", "\\\\")
 	trfCmd = trfCmd.replace('\"', '\\\"')
+
 
 	PathenaOptions_in = deepcopy(PathenaOptions)
 	PathenaOptions_in['trf'] = trfCmd
@@ -117,7 +127,7 @@ def GetPathenaCmd(PathenaOptions, TrfOptions, TrfExtraOptions, doNewLine=False):
 	pathenaCmd = "pathena "
 
 	if doNewLine:
-		pathenaCmd += ("\n")
+		pathenaCmd += (" \\\n")
 
 	for key,value in PathenaOptions_in.items():
 		pathenaCmd += ("--%s" % (key))
@@ -130,7 +140,7 @@ def GetPathenaCmd(PathenaOptions, TrfOptions, TrfExtraOptions, doNewLine=False):
 			pathenaCmd += ("=%s " % (value))
 
 		if doNewLine:
-			pathenaCmd += ("\n")
+			pathenaCmd += (" \\\n")
 
 	return pathenaCmd
 
