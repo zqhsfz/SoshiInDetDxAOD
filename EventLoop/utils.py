@@ -46,8 +46,10 @@ def runGenerateFileListR2D2(version):
 		line = line.split("\n")[0]
 		line = line.split("/")[0]
 
+		line_noscope = line.split(":")[1]
+
 		print "Processing",line,"..."
-		GenerateFileListR2D2(line, "SLAC-ATLAS-T3_GRIDFTP", "filelists/"+version+"/filelist_"+line+".txt")	
+		GenerateFileListR2D2(line, "SLAC-ATLAS-T3_GRIDFTP", "filelists/"+version+"/filelist_"+line_noscope+".txt")	
 
 
 
