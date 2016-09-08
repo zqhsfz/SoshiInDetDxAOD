@@ -65,5 +65,5 @@
 ###############################
 # Version 00-02-00:
 # 
-# Shit, I forgot what it is ... Something right after ICHEP2016 (the failed public plots)?
+# Shit, I forgot what it is ... Something right before ICHEP2016
 ###############################
