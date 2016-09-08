@@ -1,0 +1,2 @@
+group.det-indet:group.det-indet.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601.v00-02-00.BichselON_EXT0
+group.det-indet:group.det-indet.mc15_13TeV.361107.Zmumu.InDetDxAOD.OldVersion.e3601.v00-02-00.BichselON_EXT0

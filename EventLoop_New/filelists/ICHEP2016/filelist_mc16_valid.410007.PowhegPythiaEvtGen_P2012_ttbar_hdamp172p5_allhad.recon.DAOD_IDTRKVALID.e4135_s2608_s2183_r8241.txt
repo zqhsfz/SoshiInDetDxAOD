@@ -1,0 +1,10 @@
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/6f/58/DAOD_IDTRKVALID.09063932._000011.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/92/a1/DAOD_IDTRKVALID.09063932._000013.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/08/17/DAOD_IDTRKVALID.09063932._000014.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/76/a7/DAOD_IDTRKVALID.09063932._000016.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/4c/92/DAOD_IDTRKVALID.09063932._000017.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/33/79/DAOD_IDTRKVALID.09063932._000018.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/d7/50/DAOD_IDTRKVALID.09063932._000019.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/d0/6e/DAOD_IDTRKVALID.09063932._000020.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/11/7c/DAOD_IDTRKVALID.09063932._000021.pool.root.1
+root://atlprf01.slac.stanford.edu:11094//atlas/dq2/rucio/mc16_valid/f5/8a/DAOD_IDTRKVALID.09063932._000022.pool.root.1
