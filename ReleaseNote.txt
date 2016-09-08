@@ -63,3 +63,7 @@
 # 
 # First converging NN re-training done. There are still some bias issues, but we can get a relief on first order.
 ###############################
+# Version 00-02-00:
+# 
+# Shit, I forgot what it is ... Something right after ICHEP2016 (the failed public plots)?
+###############################
