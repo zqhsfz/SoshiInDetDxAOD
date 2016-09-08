@@ -67,3 +67,8 @@
 # 
 # Shit, I forgot what it is ... Something right after ICHEP2016 (the failed public plots)?
 ###############################
+# Version ICHEP2016:
+#
+# EventLoop update for ICHEP2016
+# xAODAnaHelpers version is hh4b-01-02-00-25-g192659d
+###############################
