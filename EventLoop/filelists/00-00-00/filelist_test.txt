@@ -1,1 +1,0 @@
-/u/gl/zengq/nfs/PixelClusterAnalysis/SoshiInDetDxAOD/Athena/DAOD/run/local/MyInDetxAOD.pool.root
