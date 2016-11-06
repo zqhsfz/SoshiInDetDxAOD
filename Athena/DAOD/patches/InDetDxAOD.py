@@ -288,6 +288,15 @@ if dumpLArCollisionTime:
             print lArCollisionTimeDecorator
             print lArCollisionTimeDecorator.properties()
 
+# Add decoration with truth parameters if running on simulation
+if isIdTrkDxAODSimulation:
+    from DerivationFrameworkInDet.DerivationFrameworkInDetConf import DerivationFramework__TrackParametersForTruthParticles
+    TruthDecor = DerivationFramework__TrackParametersForTruthParticles( name = "TruthTPDecor", 
+                                                                        TruthParticleContainerName = "TruthParticles", 
+                                                                        DecorationPrefix = "")
+    ToolSvc += TruthDecor
+    augmentationTools.append(TruthDecor)
+    print TruthDecor
 
 
 # Add the derivation job to the top AthAlgSeqeuence

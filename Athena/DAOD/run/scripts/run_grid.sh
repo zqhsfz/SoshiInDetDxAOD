@@ -7,5 +7,5 @@ pathena \
 --maxEvents '100'" \
 --nFilesPerJob=1 \
 --skipScout \
---inDS=user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_EXT0/ \
---outDS=user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5
+--inDS=user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_replica2_EXT0/ \
+--outDS=user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_replica2
