@@ -1,0 +1,2 @@
+user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerON_pixelON_Nominal_replica2_EXT0
+user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.e3601_ATLAS-R2-2015-03-15-00.v00-00-01_blayerON_pixelON_BichselON_replica2_EXT0
