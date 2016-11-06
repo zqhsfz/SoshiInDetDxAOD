@@ -1,0 +1,11 @@
+pathena \
+--trf "Reco_tf.py \
+--autoConfiguration 'everything' \
+--inputESDFile %IN \
+--outputDAOD_IDTRKVALIDFile %OUT.InDetDxAOD.pool.root \
+--skipEvents %SKIPEVENTS \
+--maxEvents '100'" \
+--nFilesPerJob=1 \
+--skipScout \
+--inDS=user.qzeng.mc15_13TeV.361107.Zmumu.DigiRecon.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_replica2_EXT0/ \
+--outDS=user.qzeng.mc15_13TeV.361107.Zmumu.InDetDxAOD.v00-00-02_blayerON_pixelON_FastBichselON_ECOffPUOn_nCols5_replica2

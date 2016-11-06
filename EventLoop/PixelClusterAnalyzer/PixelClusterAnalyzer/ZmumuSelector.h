@@ -22,6 +22,7 @@
 #include "xAODMuon/MuonContainer.h"
 #include "xAODEventInfo/EventInfo.h"
 #include "AsgTools/StatusCode.h"
+#include "xAODTruth/TruthParticleContainer.h"
 
 class ZmumuSelector : public EL::Algorithm
 {
@@ -108,11 +109,17 @@ private:
 
   bool TrackSelection(const xAOD::TrackParticle* track);
   std::vector<const xAOD::TrackStateValidation*> GetPixelMeasurements(const xAOD::TrackParticle* track);  // return a vector of measurement objects on pixel layers from a track
+  std::vector<const xAOD::TrackStateValidation*> GetPixelHoles(const xAOD::TrackParticle* track);         // return a vector of hole objects on pixel layers from a track
   const xAOD::TrackMeasurementValidation* GetPixelCluster(const xAOD::TrackStateValidation* msos);        // return the pixel cluster object. This function also includes necessary element link checking
   bool SelectGoodPixelCluster(const xAOD::TrackMeasurementValidation* PixelCluster);
 
-  int numberOfSiHits(const xAOD::TrackParticle* Track);
+  const xAOD::TruthParticle* GetAssocTruthParticle(const xAOD::TrackParticle* track);
+  double GetTruthMatchProb(const xAOD::TrackParticle* track);
+  const xAOD::TruthParticle* GetValidAssocTruthParticle(const xAOD::TrackParticle* track);                // Final wrapper for returning the ultimate associated truth particle
 
+  int numberOfSiHits(const xAOD::TrackParticle* Track);
+  bool TrackParameterErrDecorator(const xAOD::TrackParticle &particle, const std::string &prefix);
+  AmgMatrix(5, 5) GetJacobianThetaPToCotThetaPt(double theta, double qp);
 };
 
 #endif

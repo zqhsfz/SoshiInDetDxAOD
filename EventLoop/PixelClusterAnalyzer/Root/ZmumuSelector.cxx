@@ -572,9 +572,25 @@ bool ZmumuSelector :: HistSvcInit()
   m_histsvc_tracks = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
   m_histsvc_tracks->Book("Pt", "Pt", &m_EvtWeight, 500, 0, 500);
   m_histsvc_tracks->Book("Eta", "Eta", &m_EvtWeight, 60, -3, 3);
+  // distribution
   m_histsvc_tracks->Book("Pt_d0", "Pt", "d0", &m_EvtWeight, 500, 0, 500, 200, -1, 1);
   m_histsvc_tracks->Book("Pt_z0", "Pt", "z0", &m_EvtWeight, 500, 0, 500, 400, -2, 2);
   m_histsvc_tracks->Book("Pt_z0sintheta", "Pt", "z0sintheta", &m_EvtWeight, 500, 0, 500, 400, -2, 2);
+  m_histsvc_tracks->Book("Eta_d0", "Eta", "d0", &m_EvtWeight, 60, -3, 3, 200, -1, 1);
+  m_histsvc_tracks->Book("Eta_z0", "Eta", "z0", &m_EvtWeight, 60, -3, 3, 400, -2, 2);
+  m_histsvc_tracks->Book("Eta_z0sintheta", "Eta", "z0sintheta", &m_EvtWeight, 60, -3, 3, 400, -2, 2);
+  m_histsvc_tracks->Book("Eta_nPixelHoles", "Eta", "nPixelHoles", &m_EvtWeight, 60, -3, 3, 10, -0.5, 9.5);
+  // resolution
+  m_histsvc_tracks->Book("Pt_d0res", "Pt", "d0res", &m_EvtWeight, 500, 0, 500, 200, -1, 1);
+  m_histsvc_tracks->Book("Pt_z0res", "Pt", "z0res", &m_EvtWeight, 500, 0, 500, 400, -2, 2);
+  m_histsvc_tracks->Book("Eta_d0res", "Eta", "d0res", &m_EvtWeight, 60, -3, 3, 200, -1, 1);
+  m_histsvc_tracks->Book("Eta_z0res", "Eta", "z0res", &m_EvtWeight, 60, -3, 3, 400, -2, 2);
+  // pull
+  m_histsvc_tracks->Book("Pt_d0pull", "Pt", "d0pull", &m_EvtWeight, 500, 0, 500, 200, -5, 5);
+  m_histsvc_tracks->Book("Pt_z0pull", "Pt", "z0pull", &m_EvtWeight, 500, 0, 500, 200, -5, 5);
+  m_histsvc_tracks->Book("Eta_d0pull", "Eta", "d0pull", &m_EvtWeight, 60, -3, 3, 200, -5, 5);
+  m_histsvc_tracks->Book("Eta_z0pull", "Eta", "z0pull", &m_EvtWeight, 60, -3, 3, 200, -5, 5);
+
 
   m_histsvc_pixelclusters = new Analysis_AutoHists(wk()->getOutputFile(m_outputName));
   BookHistogramPixelCluster(m_histsvc_pixelclusters);
@@ -620,7 +636,51 @@ StatusCode ZmumuSelector :: FillHistogramTracks(std::string TrackContainerName)
     m_histsvc_tracks->Set("z0", dz);
     m_histsvc_tracks->Set("z0sintheta", dz * TMath::Sin(Track->theta()));
 
+    uint8_t getInt(0);
+    Track->summaryValue(getInt,xAOD::numberOfPixelHoles);
+    int nPixHoles = getInt;
+    m_histsvc_tracks->Set("nPixelHoles", nPixHoles);
+
+    if(!TrackParameterErrDecorator(*Track, "")){
+      Warning("FillHistogramTracks()", "Failure in decorating track parameters estimation uncertainty");
+      continue;
+    }
+
+    // resolution & pulls -- truth required
+    const xAOD::TruthParticle* associatedTruthParticle = GetValidAssocTruthParticle(Track);
+    if(associatedTruthParticle != 0){
+      double truthd0 = associatedTruthParticle->auxdata<float>("d0");
+      double truthz0 = associatedTruthParticle->auxdata<float>("z0");
+
+      m_histsvc_tracks->Set("d0res", Track->d0() - truthd0);
+      m_histsvc_tracks->Set("z0res", Track->z0() - truthz0);
+
+      double d0err = Track->auxdata<float>("d0err");
+      double z0err = Track->auxdata<float>("z0err");
+
+      if(d0err > 0){
+        m_histsvc_tracks->Set("d0pull", (Track->d0() - truthd0) / d0err);
+      }
+      else{
+        Warning("FillHistogramTracks()", "Non-positive \"d0err\" obtained: %.2f!", d0err);
+      }
+
+      if(z0err > 0){
+        m_histsvc_tracks->Set("z0pull", (Track->z0() - truthz0) / z0err);
+      }
+      else{
+        Warning("FillHistogramTracks()", "Non-positive \"z0err\" obtained: %.2f!", z0err);
+      }
+    }
+
     m_histsvc_tracks->MakeHists("GoodEvents", "_"+TrackContainerName);
+
+    // // pixel holes ---> don't know how to extract the layer of holes
+    // auto msosVector_holes = GetPixelHoles(Track);
+    // for(auto msos : msosVector_holes){
+    //   auto PixelHole = GetPixelCluster(msos);   // test
+    //   m_histsvc_cutflow->AutoFill("GoodEvents_"+TrackContainerName, "_PixelHoles", "trkEta_PixelHoleLayer", Track->eta(), PixelHole->auxdata<int>("layer"), m_EvtWeight, 60, -3, 3, 10, -0.5, 9.5);
+    // }
 
     // pixel clusters
     auto msosVector = GetPixelMeasurements(Track);
@@ -751,6 +811,16 @@ bool ZmumuSelector :: BookHistogramPixelCluster(Analysis_AutoHists* histsvc)
   histsvc->Book("EtaModule_trklocUnbiasedResidualX", "EtaModule", "trklocUnbiasedResidualX", &m_EvtWeight, 21, -10.5, 10.5, 100, -0.1, 0.1);
   histsvc->Book("EtaModule_trklocUnbiasedResidualY", "EtaModule", "trklocUnbiasedResidualY", &m_EvtWeight, 21, -10.5, 10.5, 100, -0.5, 0.5);
 
+  // pull
+  histsvc->Book("InciPhi_trklocUnbiasedPullX", "InciPhi", "trklocUnbiasedPullX", &m_EvtWeight, 70, 0, 0.7, 200, -5, 5);
+  histsvc->Book("InciPhi_trklocUnbiasedPullY", "InciPhi", "trklocUnbiasedPullY", &m_EvtWeight, 70, 0, 0.7, 200, -5, 5);
+  histsvc->Book("EtaModule_trklocUnbiasedPullX", "EtaModule", "trklocUnbiasedPullX", &m_EvtWeight, 21, -10.5, 10.5, 200, -5, 5);
+  histsvc->Book("EtaModule_trklocUnbiasedPullY", "EtaModule", "trklocUnbiasedPullY", &m_EvtWeight, 21, -10.5, 10.5, 200, -5, 5);
+  histsvc->Book("trkPt_trklocUnbiasedPullX", "trkPt", "trklocUnbiasedPullX", &m_EvtWeight, 100, 0, 100, 200, -5, 5);
+  histsvc->Book("trkPt_trklocUnbiasedPullY", "trkPt", "trklocUnbiasedPullY", &m_EvtWeight, 100, 0, 100, 200, -5, 5);
+  histsvc->Book("trkEta_trklocUnbiasedPullX", "trkEta", "trklocUnbiasedPullX", &m_EvtWeight, 20, -2.5, 2.5, 200, -5, 5);
+  histsvc->Book("trkEta_trklocUnbiasedPullY", "trkEta", "trklocUnbiasedPullY", &m_EvtWeight, 20, -2.5, 2.5, 200, -5, 5);
+
   return true;
 }
 
@@ -798,6 +868,10 @@ bool ZmumuSelector :: FillHistogramPixelCluster(std::string TrackContainerName, 
   // residual
   m_histsvc_pixelclusters->Set("trklocUnbiasedResidualX", msos->auxdata<float>("unbiasedResidualX"));
   m_histsvc_pixelclusters->Set("trklocUnbiasedResidualY", msos->auxdata<float>("unbiasedResidualY"));
+
+  // pull
+  m_histsvc_pixelclusters->Set("trklocUnbiasedPullX", msos->auxdata<float>("unbiasedPullX"));
+  m_histsvc_pixelclusters->Set("trklocUnbiasedPullY", msos->auxdata<float>("unbiasedPullY"));
 
   // Cluster Shapes
   if(PixelCluster->isAvailable<int>("size")){
@@ -1020,6 +1094,36 @@ std::vector<const xAOD::TrackStateValidation*> ZmumuSelector :: GetPixelMeasurem
   return output;
 }
 
+std::vector<const xAOD::TrackStateValidation*> ZmumuSelector :: GetPixelHoles(const xAOD::TrackParticle* Track)
+{
+  if(m_debug) Info("GetPixelHoles()", "Begin retrieving pixel holes ...");
+
+  std::vector<const xAOD::TrackStateValidation*> output;
+
+  std::string msosLink("msosLink");
+  auto msosLinkVector = Track->auxdata< std::vector<ElementLink< xAOD::TrackStateValidationContainer > > >(msosLink);
+
+  for(auto msosLink : msosLinkVector){
+    // make sure the link is valid
+    if( (!msosLink.isValid()) || ((*msosLink) == 0) ){
+      Warning("GetPixelHoles()", "Invalid link to msos of track.");
+      continue;
+    }
+
+    const xAOD::TrackStateValidation* msos = (*msosLink);
+
+    // make sure it is a measurement on pixel detector (pixel + IBL)
+    if( (msos->detType() != TrackState::Pixel)  ||  (msos->type() != TrackStateOnSurface::Hole) ) continue;
+
+    // done
+    output.push_back(msos);
+  }
+
+  if(m_debug) Info("GetPixelHoles()", "Leaving GetPixelHoles ...");
+
+  return output;
+}
+
 const xAOD::TrackMeasurementValidation* ZmumuSelector :: GetPixelCluster(const xAOD::TrackStateValidation* msos)
 {
   auto el_PixelCluster = msos->trackMeasurementValidationLink();
@@ -1047,6 +1151,49 @@ bool ZmumuSelector :: SelectGoodPixelCluster(const xAOD::TrackMeasurementValidat
   return true;
 }
 
+const xAOD::TruthParticle* ZmumuSelector :: GetAssocTruthParticle(const xAOD::TrackParticle* track){
+  const xAOD::TruthParticle* associatedTruthParticle = 0;
+
+  typedef ElementLink<xAOD::TruthParticleContainer> ELTruthLink_t;
+  if(track->isAvailable<ELTruthLink_t>("truthParticleLink")){
+    auto el_truth = track->auxdata<ELTruthLink_t>("truthParticleLink");
+    if(el_truth.isValid()){
+      associatedTruthParticle = (*el_truth);
+    }
+    else{
+      if(m_debug) Warning("GetAssocTruthParticle()", "Invalid link to \"truthParticleLink\"!");
+    }
+  }
+  else{
+    if(m_debug) Warning("GetAssocTruthParticle()", "Link \"truthParticleLink\" not available!");
+  }
+
+  if(associatedTruthParticle == 0){
+    if(m_debug) Warning("GetAssocTruthParticle()", "Null ptr returned for \"truthParticleLink\"!");
+  }
+
+  return associatedTruthParticle;
+}
+
+double ZmumuSelector :: GetTruthMatchProb(const xAOD::TrackParticle* track){
+  double output = -1;
+  if(track->isAvailable<float>("truthMatchProbability")){
+    output = track->auxdata<float>("truthMatchProbability");
+  }
+  else{
+    Warning("GetTruthMatchProb()", "Decoration \"truthMatchProbability\" not available!");
+  }
+
+  return output;
+}
+
+const xAOD::TruthParticle* ZmumuSelector :: GetValidAssocTruthParticle(const xAOD::TrackParticle* track){
+  if(GetTruthMatchProb(track) < 0.5) return 0;
+  const xAOD::TruthParticle* associatedTruthParticle = GetAssocTruthParticle(track);
+
+  return associatedTruthParticle;
+}
+
 // copy from https://svnweb.cern.ch/trac/atlasperf/browser/CombPerf/Tracking/TrackingInDenseEnvironments/SimpleAnaxAOD/trunk/HistManager/Root/TrackHelper.cxx
 int ZmumuSelector :: numberOfSiHits(const xAOD::TrackParticle* trkPart)
 {
@@ -1068,3 +1215,43 @@ int ZmumuSelector :: numberOfSiHits(const xAOD::TrackParticle* trkPart)
 
   return nSiHits;
 }
+
+// copy from http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/InnerDetector/InDetValidation/InDetPhysValMonitoring/src/ParameterErrDecoratorTool.cxx
+bool ZmumuSelector :: TrackParameterErrDecorator(const xAOD::TrackParticle &particle, const std::string &prefix){
+  const AmgSymMatrix(5) errorMat = particle.definingParametersCovMatrix();
+  double mtheta = particle.theta();
+  double mqp = particle.qOverP();
+
+  AmgMatrix(5,5) TheJac = GetJacobianThetaPToCotThetaPt(mtheta, mqp);
+  AmgSymMatrix(5) covVert;
+  covVert = errorMat.similarity(TheJac);
+
+  particle.auxdecor<float>(prefix + "d0err") = std::sqrt( covVert(0, 0) );
+  particle.auxdecor<float>(prefix + "z0err") = std::sqrt( covVert(1, 1) );
+  particle.auxdecor<float>(prefix + "phierr") = std::sqrt( covVert(2, 2) );
+  particle.auxdecor<float>(prefix + "thetaerr") = std::sqrt( errorMat(3, 3) );
+  particle.auxdecor<float>(prefix + "qopterr") = std::sqrt( covVert(4, 4) ) * 1000.;
+
+  return true;
+}
+
+// copy from http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Tracking/TrkEvent/TrkEventPrimitives/src/JacobianThetaPToCotThetaPt.cxx
+AmgMatrix(5, 5) ZmumuSelector :: GetJacobianThetaPToCotThetaPt(double theta, double qp){
+  AmgMatrix(5,5) output;
+  output.setIdentity();
+
+  double sintheta = std::sin(theta);
+  output(3,3) = -1./(sintheta*sintheta);
+  output(4,3) = -qp*std::cos(theta)/(sintheta*sintheta);
+  output(4,4) = 1.0/sintheta;
+
+  return output;
+}
+
+
+
+
+
+
+
+
